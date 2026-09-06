@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royaume de Illumis - Plasmacube</title>
+    <style>
+        /* --- STYLE GENERAL --- */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #f39c12;
+            --bg-color: #ecf0f1;
+            --text-color: #333;
+            --card-bg: #fff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            border-bottom: 4px solid var(--secondary);
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #34495e;
+        }
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        nav button:hover, nav button.active {
+            background-color: var(--secondary);
+            color: white;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* --- ACCUEIL --- */
+        .gallery {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .photo-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #ddd;
+            border: 2px dashed #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            border-radius: 8px;
+        }
+
+        /* --- JOUEURS --- */
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .player-card {
+            background: #f9f9f9;
+            border-left: 5px solid var(--secondary);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .status-actif { color: green; font-weight: bold; }
+        .status-retraite { color: gray; font-style: italic; }
+
+        /* --- BANQUE --- */
+        .bank-stats {
+            display: flex;
+            justify-content: space-around;
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .bank-stats div { text-align: center; }
+        .bank-stats h3 { margin: 0 0 10px 0; font-size: 24px; color: var(--secondary); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: var(--primary); color: white; }
+        .amount-pos { color: green; font-weight: bold; }
+        .amount-neg { color: red; font-weight: bold; }
+
+        /* --- PROJETS --- */
+        .project-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        /* --- ADMIN LOGIN --- */
+        .admin-panel { display: none; margin-top: 20px; border-top: 2px solid #ddd; padding-top: 20px; }
+        input[type="password"], input[type="text"] { padding: 8px; margin: 5px 0; width: 200px; }
+        button.btn-login { padding: 8px 15px; background: var(--secondary); border: none; color: white; cursor: pointer; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏰 Royaume de Illumis</h1>
+        <p>Serveur Plasmacube - Aventure Cobblemon</p>
+    </header>
+
+    <nav>
+        <button class="tab-btn active" onclick="openTab('accueil')">Accueil</button>
+        <button class="tab-btn" onclick="openTab('joueurs')">Joueurs</button>
+        <button class="tab-btn" onclick="openTab('banque')">Banque</button>
+        <button class="tab-btn" onclick="openTab('projets')">Projets</button>
+        <button class="tab-btn" onclick="openTab('admin')">Connexion (Staff)</button>
+    </nav>
+
+    <div class="container">
+        
+        <!-- ONGLET ACCUEIL -->
+        <div id="accueil" class="tab-content active">
+            <h2>Bienvenue dans le Royaume de Illumis</h2>
+            <p>Le Royaume d'Illumis est une faction puissante et prospère sur Plasmacube. Rejoignez-nous pour construire, capturer des Cobblemons et dominer l'économie !</p>
+            
+            <h3>Galerie Photo</h3>
+            <div class="gallery">
+                <div class="photo-placeholder">Emplacement Photo 1</div>
+                <div class="photo-placeholder">Emplacement Photo 2</div>
+                <div class="photo-placeholder">Emplacement Photo 3</div>
+            </div>
+        </div>
+
+        <!-- ONGLET JOUEURS -->
+        <div id="joueurs" class="tab-content">
+            <h2>Membres du Royaume</h2>
+            <div class="players-grid">
+                <!-- Carte Joueur 1 -->
+                <div class="player-card">
+                    <h3>Silas</h3>
+                    <p><strong>Rôle :</strong> Éditeur / Fondateur</p>
+                    <p><strong>Rejoint le :</strong> 01/09/2026</p>
+                    <p class="status-actif">Actif</p>
+                </div>
+                <!-- Carte Joueur 2 -->
+                <div class="player-card">
+                    <h3>ExempleJoueur1</h3>
+                    <p><strong>Rôle :</strong> Officier</p>
+                    <p><strong>Rejoint le :</strong> 05/09/2026</p>
+                    <p class="status-actif">Actif</p>
+                </div>
+                <!-- Carte Joueur 3 -->
+                <div class="player-card">
+                    <h3>AncienMaitre</h3>
+                    <p><strong>Rôle :</strong> Membre</p>
+                    <p><strong>Rejoint le :</strong> 10/08/2026</p>
+                    <p class="status-retraite">Retraité</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET BANQUE -->
+        <div id="banque" class="tab-content">
+            <h2>Économie de la Ville</h2>
+            
+            <div class="bank-stats">
+                <div>
+                    <h3 id="total-solde">0</h3>
+                    <p>Solde Actuel</p>
+                </div>
+                <div>
+                    <h3 id="total-retraits">0</h3>
+                    <p>Total des Retraits</p>
+                </div>
+            </div>
+
+            <h3>🏆 Top 3 Donateurs</h3>
+            <ol id="top-donateurs-list">
+                <!-- Généré par JavaScript -->
+            </ol>
+
+            <h3>Historique des Transactions</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Pseudo</th>
+                        <th>Motif</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-list">
+                    <!-- Généré par JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ONGLET PROJETS -->
+        <div id="projets" class="tab-content">
+            <h2>Projets en cours</h2>
+            <div class="project-card">
+                <h3>Arène Cobblemon Principale</h3>
+                <p><strong>Lancé par :</strong> Silas</p>
+                <p>Construction de la grande arène pour les tournois de la ville. Nous avons besoin de beaucoup de Quartz et de béton.</p>
+                <div class="photo-placeholder" style="height: 100px; margin-top: 10px;">Image du plan de l'arène</div>
+            </div>
+        </div>
+
+        <!-- ONGLET ADMIN / STAFF -->
+        <div id="admin" class="tab-content">
+            <h2>Espace Staff (Éditeur & Officiers)</h2>
+            <p>Connectez-vous pour accéder aux logs et à la gestion.</p>
+            
+            <div id="login-section">
+                <input type="password" id="password-input" placeholder="Mot de passe...">
+                <button class="btn-login" onclick="checkPassword()">Se connecter</button>
+                <p id="login-error" style="color: red; display: none;">Mot de passe incorrect.</p>
+            </div>
+
+            <div id="admin-dashboard" class="admin-panel">
+                <h3 style="color: var(--secondary);">✅ Bienvenue Éditeur (Silas)</h3>
+                <p><em>Rappel : Sur cette version simple du site, ces outils sont visuels. Les vraies sauvegardes nécessitent une base de données.</em></p>
+                
+                <h4>Outils d'Éditeur</h4>
+                <button class="btn-login">Créer un compte Officier</button>
+                <button class="btn-login">Modifier la description</button>
+                
+                <h4>Logs Récents</h4>
+                <ul style="background: #333; color: lime; padding: 15px; font-family: monospace; border-radius: 5px;">
+                    <li>[07/09/2026 10:00] - Silas s'est connecté.</li>
+                    <li>[06/09/2026 18:30] - Officier1 a modifié le statut de "AncienMaitre" à Retraité.</li>
+                    <li>[06/09/2026 15:20] - Officier2 a ajouté le projet "Arène Cobblemon".</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS POUR FAIRE FONCTIONNER LA LOGIQUE -->
+    <script>
+        // 1. Système d'onglets
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // 2. Base de données simulée pour la Banque (Modifie les lignes ci-dessous pour ajouter des dons !)
+        const transactions = [
+            { date: "02/09/2026", type: "Don", pseudo: "Silas", motif: "Fond de départ", montant: 50000 },
+            { date: "03/09/2026", type: "Don", pseudo: "ExempleJoueur1", motif: "Vente de diamants", montant: 15000 },
+            { date: "04/09/2026", type: "Retrait", pseudo: "ExempleJoueur1", motif: "Achat de claims", montant: -5000 },
+            { date: "05/09/2026", type: "Don", pseudo: "NouveauGars", motif: "Taxe d'entrée", montant: 2000 },
+            { date: "06/09/2026", type: "Don", pseudo: "Silas", motif: "Bénéfice de farm", montant: 12000 }
+        ];
+
+        // 3. Calcul de la banque automatique
+        function calculerBanque() {
+            let solde = 0;
+            let retraits = 0;
+            let donsParJoueur = {};
+
+            const tableBody = document.getElementById("transactions-list");
+            tableBody.innerHTML = "";
+
+            transactions.forEach(t => {
+                // Calculs
+                solde += t.montant;
+                if (t.montant < 0) {
+                    retraits += Math.abs(t.montant);
+                } else {
+                    if (!donsParJoueur[t.pseudo]) donsParJoueur[t.pseudo] = 0;
+                    donsParJoueur[t.pseudo] += t.montant;
+                }
+
+                // Affichage dans le tableau
+                const colorClass = t.montant >= 0 ? "amount-pos" : "amount-neg";
+                const signe = t.montant > 0 ? "+" : "";
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${t.date}</td>
+                        <td>${t.type}</td>
+                        <td>${t.pseudo}</td>
+                        <td>${t.motif}</td>
+                        <td class="${colorClass}">${signe}${t.montant} $</td>
+                    </tr>
+                `;
+            });
+
+            // Affichage des totaux
+            document.getElementById("total-solde").innerText = solde.toLocaleString() + " $";
+            document.getElementById("total-retraits").innerText = retraits.toLocaleString() + " $";
+
+            // Calcul du Top 3
+            const topDonateurs = Object.keys(donsParJoueur)
+                .map(pseudo => ({ pseudo, total: donsParJoueur[pseudo] }))
+                .sort((a, b) => b.total - a.total)
+                .slice(0, 3); // Garder les 3 premiers
+
+            const topList = document.getElementById("top-donateurs-list");
+            topDonateurs.forEach(d => {
+                topList.innerHTML += `<li><strong>${d.pseudo}</strong> : ${d.total.toLocaleString()} $ donnés au total</li>`;
+            });
+        }
+
+        // 4. Système de connexion basique (Mot de passe : Silas12)
+        function checkPassword() {
+            const input = document.getElementById("password-input").value;
+            if (input === "Silas12") {
+                document.getElementById("login-section").style.display = "none";
+                document.getElementById("admin-dashboard").style.display = "block";
+            } else {
+                document.getElementById("login-error").style.display = "block";
+            }
+        }
+
+        // Lancer le calcul de la banque au chargement de la page
+        calculerBanque();
+    </script>
+</body>
+</html>
