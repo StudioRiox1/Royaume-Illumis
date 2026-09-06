@@ -3,344 +3,772 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royaume de Illumis - Plasmacube</title>
+    <title>Royaume Illumis — PlasmaCube</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* --- STYLE GENERAL --- */
-        :root {
-            --primary: #2c3e50;
-            --secondary: #f39c12;
-            --bg-color: #ecf0f1;
-            --text-color: #333;
-            --card-bg: #fff;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-        header {
-            background-color: var(--primary);
-            color: white;
-            text-align: center;
-            padding: 1rem 0;
-            border-bottom: 4px solid var(--secondary);
-        }
-        nav {
-            display: flex;
-            justify-content: center;
-            background-color: #34495e;
-        }
-        nav button {
-            background: none;
-            border: none;
-            color: white;
-            padding: 15px 25px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-        nav button:hover, nav button.active {
-            background-color: var(--secondary);
-            color: white;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 20px;
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* --- ACCUEIL --- */
-        .gallery {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .photo-placeholder {
-            width: 100%;
-            height: 150px;
-            background-color: #ddd;
-            border: 2px dashed #999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #777;
-            border-radius: 8px;
-        }
-
-        /* --- JOUEURS --- */
-        .players-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .player-card {
-            background: #f9f9f9;
-            border-left: 5px solid var(--secondary);
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .status-actif { color: green; font-weight: bold; }
-        .status-retraite { color: gray; font-style: italic; }
-
-        /* --- BANQUE --- */
-        .bank-stats {
-            display: flex;
-            justify-content: space-around;
-            background: var(--primary);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .bank-stats div { text-align: center; }
-        .bank-stats h3 { margin: 0 0 10px 0; font-size: 24px; color: var(--secondary); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: var(--primary); color: white; }
-        .amount-pos { color: green; font-weight: bold; }
-        .amount-neg { color: red; font-weight: bold; }
-
-        /* --- PROJETS --- */
-        .project-card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        /* --- ADMIN LOGIN --- */
-        .admin-panel { display: none; margin-top: 20px; border-top: 2px solid #ddd; padding-top: 20px; }
-        input[type="password"], input[type="text"] { padding: 8px; margin: 5px 0; width: 200px; }
-        button.btn-login { padding: 8px 15px; background: var(--secondary); border: none; color: white; cursor: pointer; border-radius: 4px; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col items-center">
 
-    <header>
-        <h1>🏰 Royaume de Illumis</h1>
-        <p>Serveur Plasmacube - Aventure Cobblemon</p>
+    <!-- EN-TÊTE -->
+    <header class="w-full border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent uppercase">
+                    Royaume Illumis
+                </span>
+                <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full font-bold">PlasmaCube</span>
+            </div>
+            
+            <nav class="flex flex-wrap gap-2">
+                <button onclick="switchTab('accueil')" id="tab-btn-accueil" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition">Accueil</button>
+                <button onclick="switchTab('projets')" id="tab-btn-projets" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Projets</button>
+                <button onclick="switchTab('pantheon')" id="tab-btn-pantheon" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">🏛️ Panthéon</button>
+                <button onclick="switchTab('joueurs')" id="tab-btn-joueurs" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Joueurs</button>
+                <!-- BANQUE (MASQUÉE PAR DÉFAUT / VISIBLE SEULEMENT SI CONNECTÉ) -->
+                <button onclick="switchTab('banque')" id="tab-btn-banque" class="hidden px-4 py-2 rounded-xl bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold text-sm hover:text-white transition">🏦 Banque</button>
+            </nav>
+        </div>
     </header>
 
-    <nav>
-        <button class="tab-btn active" onclick="openTab('accueil')">Accueil</button>
-        <button class="tab-btn" onclick="openTab('joueurs')">Joueurs</button>
-        <button class="tab-btn" onclick="openTab('banque')">Banque</button>
-        <button class="tab-btn" onclick="openTab('projets')">Projets</button>
-        <button class="tab-btn" onclick="openTab('admin')">Connexion (Staff)</button>
-    </nav>
-
-    <div class="container">
-        
-        <!-- ONGLET ACCUEIL -->
-        <div id="accueil" class="tab-content active">
-            <h2>Bienvenue dans le Royaume de Illumis</h2>
-            <p>Le Royaume d'Illumis est une faction puissante et prospère sur Plasmacube. Rejoignez-nous pour construire, capturer des Cobblemons et dominer l'économie !</p>
-            
-            <h3>Galerie Photo</h3>
-            <div class="gallery">
-                <div class="photo-placeholder">Emplacement Photo 1</div>
-                <div class="photo-placeholder">Emplacement Photo 2</div>
-                <div class="photo-placeholder">Emplacement Photo 3</div>
-            </div>
+    <!-- BANNIÈRE DE CONNEXION -->
+    <div id="role-banner" class="hidden w-full bg-slate-900 border-b border-slate-800 py-3 px-6">
+        <div class="max-w-6xl mx-auto flex justify-between items-center text-xs font-bold">
+            <span id="banner-text" class="text-amber-400 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Connecté
+            </span>
+            <button onclick="logoutRole()" class="bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-700 hover:text-white">Déconnexion</button>
         </div>
-
-        <!-- ONGLET JOUEURS -->
-        <div id="joueurs" class="tab-content">
-            <h2>Membres du Royaume</h2>
-            <div class="players-grid">
-                <!-- Carte Joueur 1 -->
-                <div class="player-card">
-                    <h3>Silas</h3>
-                    <p><strong>Rôle :</strong> Éditeur / Fondateur</p>
-                    <p><strong>Rejoint le :</strong> 01/09/2026</p>
-                    <p class="status-actif">Actif</p>
-                </div>
-                <!-- Carte Joueur 2 -->
-                <div class="player-card">
-                    <h3>ExempleJoueur1</h3>
-                    <p><strong>Rôle :</strong> Officier</p>
-                    <p><strong>Rejoint le :</strong> 05/09/2026</p>
-                    <p class="status-actif">Actif</p>
-                </div>
-                <!-- Carte Joueur 3 -->
-                <div class="player-card">
-                    <h3>AncienMaitre</h3>
-                    <p><strong>Rôle :</strong> Membre</p>
-                    <p><strong>Rejoint le :</strong> 10/08/2026</p>
-                    <p class="status-retraite">Retraité</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ONGLET BANQUE -->
-        <div id="banque" class="tab-content">
-            <h2>Économie de la Ville</h2>
-            
-            <div class="bank-stats">
-                <div>
-                    <h3 id="total-solde">0</h3>
-                    <p>Solde Actuel</p>
-                </div>
-                <div>
-                    <h3 id="total-retraits">0</h3>
-                    <p>Total des Retraits</p>
-                </div>
-            </div>
-
-            <h3>🏆 Top 3 Donateurs</h3>
-            <ol id="top-donateurs-list">
-                <!-- Généré par JavaScript -->
-            </ol>
-
-            <h3>Historique des Transactions</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Pseudo</th>
-                        <th>Motif</th>
-                        <th>Montant</th>
-                    </tr>
-                </thead>
-                <tbody id="transactions-list">
-                    <!-- Généré par JavaScript -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- ONGLET PROJETS -->
-        <div id="projets" class="tab-content">
-            <h2>Projets en cours</h2>
-            <div class="project-card">
-                <h3>Arène Cobblemon Principale</h3>
-                <p><strong>Lancé par :</strong> Silas</p>
-                <p>Construction de la grande arène pour les tournois de la ville. Nous avons besoin de beaucoup de Quartz et de béton.</p>
-                <div class="photo-placeholder" style="height: 100px; margin-top: 10px;">Image du plan de l'arène</div>
-            </div>
-        </div>
-
-        <!-- ONGLET ADMIN / STAFF -->
-        <div id="admin" class="tab-content">
-            <h2>Espace Staff (Éditeur & Officiers)</h2>
-            <p>Connectez-vous pour accéder aux logs et à la gestion.</p>
-            
-            <div id="login-section">
-                <input type="password" id="password-input" placeholder="Mot de passe...">
-                <button class="btn-login" onclick="checkPassword()">Se connecter</button>
-                <p id="login-error" style="color: red; display: none;">Mot de passe incorrect.</p>
-            </div>
-
-            <div id="admin-dashboard" class="admin-panel">
-                <h3 style="color: var(--secondary);">✅ Bienvenue Éditeur (Silas)</h3>
-                <p><em>Rappel : Sur cette version simple du site, ces outils sont visuels. Les vraies sauvegardes nécessitent une base de données.</em></p>
-                
-                <h4>Outils d'Éditeur</h4>
-                <button class="btn-login">Créer un compte Officier</button>
-                <button class="btn-login">Modifier la description</button>
-                
-                <h4>Logs Récents</h4>
-                <ul style="background: #333; color: lime; padding: 15px; font-family: monospace; border-radius: 5px;">
-                    <li>[07/09/2026 10:00] - Silas s'est connecté.</li>
-                    <li>[06/09/2026 18:30] - Officier1 a modifié le statut de "AncienMaitre" à Retraité.</li>
-                    <li>[06/09/2026 15:20] - Officier2 a ajouté le projet "Arène Cobblemon".</li>
-                </ul>
-            </div>
-        </div>
-
     </div>
 
-    <!-- SCRIPTS POUR FAIRE FONCTIONNER LA LOGIQUE -->
-    <script>
-        // 1. Système d'onglets
-        function openTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
+    <main class="max-w-6xl w-full px-6 py-8 flex-1">
+        
+        <!-- SECTION ACCUEIL -->
+        <section id="section-accueil">
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 mb-8 relative overflow-hidden shadow-2xl">
+                <div class="max-w-3xl space-y-4 relative z-10">
+                    <span class="text-xs font-black tracking-widest text-amber-400 uppercase bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">Bienvenue au Royaume</span>
+                    <h1 id="home-title" class="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">Le Royaume Illumis</h1>
+                    <p id="home-desc" class="text-slate-300 text-sm md:text-base leading-relaxed"></p>
+                    <div class="pt-4 flex flex-wrap items-center gap-4">
+                        <a id="discord-link" href="#" target="_blank" class="inline-flex items-center gap-3 bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold px-6 py-3.5 rounded-2xl shadow-lg transition">Rejoindre notre Discord</a>
+                    </div>
+                </div>
+            </div>
 
-        // 2. Base de données simulée pour la Banque (Modifie les lignes ci-dessous pour ajouter des dons !)
-        const transactions = [
-            { date: "02/09/2026", type: "Don", pseudo: "Silas", motif: "Fond de départ", montant: 50000 },
-            { date: "03/09/2026", type: "Don", pseudo: "ExempleJoueur1", motif: "Vente de diamants", montant: 15000 },
-            { date: "04/09/2026", type: "Retrait", pseudo: "ExempleJoueur1", motif: "Achat de claims", montant: -5000 },
-            { date: "05/09/2026", type: "Don", pseudo: "NouveauGars", motif: "Taxe d'entrée", montant: 2000 },
-            { date: "06/09/2026", type: "Don", pseudo: "Silas", motif: "Bénéfice de farm", montant: 12000 }
-        ];
+            <!-- VIP DU MOIS -->
+            <div class="mb-8 bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/30 rounded-3xl p-6 relative">
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <div id="vip-img-box" class="w-24 h-24 rounded-2xl bg-slate-800 border-2 border-amber-500/50 flex items-center justify-center overflow-hidden shrink-0"></div>
+                    <div class="flex-1 text-center md:text-left">
+                        <span class="text-[10px] font-black tracking-wider text-amber-400 uppercase bg-amber-500/20 px-2.5 py-1 rounded-full">⭐ VIP DU MOIS</span>
+                        <h3 id="vip-name" class="text-xl font-bold text-white mt-2">Joueur Nom</h3>
+                        <p id="vip-title" class="text-xs font-semibold text-amber-400 mb-1">Meilleur Bâtisseur</p>
+                        <p id="vip-desc" class="text-xs text-slate-300 italic">"Description..."</p>
+                    </div>
+                </div>
+            </div>
 
-        // 3. Calcul de la banque automatique
-        function calculerBanque() {
-            let solde = 0;
-            let retraits = 0;
-            let donsParJoueur = {};
+            <!-- GALERIE PHOTOS -->
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-white mb-4">Galerie du Royaume</h2>
+                <div id="home-gallery" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            </div>
 
-            const tableBody = document.getElementById("transactions-list");
-            tableBody.innerHTML = "";
+            <!-- ÉDITION ACCUEIL (OFFICIER/ADMIN) -->
+            <div id="home-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-6 rounded-2xl space-y-4 mb-8">
+                <h3 class="text-sm font-bold text-amber-400">✏️ Édition Accueil & VIP</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="edit-home-title" onchange="updateHome('title', this.value)" placeholder="Titre" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                    <input type="text" id="edit-home-discord" onchange="updateHome('discord', this.value)" placeholder="Lien Discord" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+                <textarea id="edit-home-desc" rows="2" onchange="updateHome('desc', this.value)" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white"></textarea>
+                <div class="border-t border-slate-800 pt-3">
+                    <h4 class="text-xs font-bold text-amber-400 mb-2">Configuration VIP</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                        <input type="text" id="edit-vip-name" onchange="updateVip('name', this.value)" placeholder="Pseudo" class="bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
+                        <input type="text" id="edit-vip-title" onchange="updateVip('title', this.value)" placeholder="Titre" class="bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
+                        <input type="text" id="edit-vip-img" onchange="updateVip('img', this.value)" placeholder="URL Image ou Skin" class="bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
+                        <input type="text" id="edit-vip-desc" onchange="updateVip('desc', this.value)" placeholder="Description" class="bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
+                    </div>
+                </div>
+            </div>
 
-            transactions.forEach(t => {
-                // Calculs
-                solde += t.montant;
-                if (t.montant < 0) {
-                    retraits += Math.abs(t.montant);
-                } else {
-                    if (!donsParJoueur[t.pseudo]) donsParJoueur[t.pseudo] = 0;
-                    donsParJoueur[t.pseudo] += t.montant;
-                }
+            <!-- PANNEAU ADMIN : GESTION DES COMPTES (MEMBRES ET OFFICIER) -->
+            <div id="admin-panel" class="hidden bg-slate-900 border border-purple-500/40 p-6 rounded-2xl space-y-6 mb-8">
+                <h3 class="text-sm font-bold text-purple-400 flex items-center gap-2">👑 Panneau Administration (Comptes)</h3>
+                
+                <!-- CRÉATION / LISTE MEMBRES -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold text-emerald-400">🟢 Comptes Membres (Accès Banque & Fonctions réservées)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <input type="text" id="new-member-user" placeholder="Pseudo Membre" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                        <input type="text" id="new-member-pass" placeholder="Mot de passe" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                        <button onclick="addMemberAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase">Créer Membre</button>
+                    </div>
+                    <div id="members-list" class="space-y-2 pt-2"></div>
+                </div>
 
-                // Affichage dans le tableau
-                const colorClass = t.montant >= 0 ? "amount-pos" : "amount-neg";
-                const signe = t.montant > 0 ? "+" : "";
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>${t.date}</td>
-                        <td>${t.type}</td>
-                        <td>${t.pseudo}</td>
-                        <td>${t.motif}</td>
-                        <td class="${colorClass}">${signe}${t.montant} $</td>
-                    </tr>
-                `;
-            });
+                <!-- CRÉATION / LISTE OFFICIERS -->
+                <div class="border-t border-slate-800 pt-4 space-y-3">
+                    <h4 class="text-xs font-bold text-amber-400">🟡 Comptes Officiers (Accès Édition + Banque)</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <input type="text" id="new-officer-user" placeholder="Pseudo Officier" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                        <input type="text" id="new-officer-pass" placeholder="Mot de passe" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                        <button onclick="addOfficerAccount()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Créer Officier</button>
+                    </div>
+                    <div id="officers-list" class="space-y-2 pt-2"></div>
+                </div>
+            </div>
 
-            // Affichage des totaux
-            document.getElementById("total-solde").innerText = solde.toLocaleString() + " $";
-            document.getElementById("total-retraits").innerText = retraits.toLocaleString() + " $";
+            <!-- BOUTONS D'ACCÈS EN BAS DE PAGE -->
+            <div class="border-t border-slate-800 pt-6 flex flex-wrap justify-center gap-4">
+                <button onclick="openLoginModal('member')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 font-bold text-xs transition flex items-center gap-2">
+                    🔑 Espace Membre
+                </button>
+                <button onclick="openLoginModal('officer')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold text-xs transition flex items-center gap-2">
+                    🔒 Espace Officier
+                </button>
+                <button onclick="openLoginModal('admin')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-400 border border-purple-500/30 font-bold text-xs transition flex items-center gap-2">
+                    👑 Espace Admin
+                </button>
+            </div>
+        </section>
 
-            // Calcul du Top 3
-            const topDonateurs = Object.keys(donsParJoueur)
-                .map(pseudo => ({ pseudo, total: donsParJoueur[pseudo] }))
-                .sort((a, b) => b.total - a.total)
-                .slice(0, 3); // Garder les 3 premiers
+        <!-- SECTION PROJETS -->
+        <section id="section-projets" class="hidden">
+            <div id="projects-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-3">
+                <h3 class="text-sm font-bold text-amber-400">➕ Ajouter un Projet</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <input type="text" id="new-proj-title" placeholder="Titre du projet" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <input type="text" id="new-proj-status" placeholder="Statut (ex: En cours)" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <button onclick="addProject()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Ajouter Projet</button>
+                </div>
+                <textarea id="new-proj-desc" placeholder="Description..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></textarea>
+            </div>
+            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        </section>
 
-            const topList = document.getElementById("top-donateurs-list");
-            topDonateurs.forEach(d => {
-                topList.innerHTML += `<li><strong>${d.pseudo}</strong> : ${d.total.toLocaleString()} $ donnés au total</li>`;
-            });
-        }
+        <!-- SECTION PANTHÉON -->
+        <section id="section-pantheon" class="hidden">
+            <div class="mb-6"><h1 class="text-2xl font-black text-white">🏛️ Panthéon du Royaume</h1></div>
+            <div id="pantheon-page-1" class="space-y-4">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-6">
+                    <div id="pantheon-amine-img" class="w-28 h-28 rounded-2xl bg-slate-800 border-2 border-amber-500 flex items-center justify-center shrink-0 overflow-hidden"></div>
+                    <div class="flex-1 text-center md:text-left">
+                        <h2 id="pantheon-amine-name" class="text-xl font-extrabold text-white">amine</h2>
+                        <p id="pantheon-amine-desc" class="text-xs text-slate-300 mt-2"></p>
+                    </div>
+                </div>
+            </div>
+            <div id="pantheon-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mt-8 space-y-3">
+                <h3 class="text-sm font-bold text-amber-400">✏️ Édition Panthéon</h3>
+                <input type="text" id="edit-amine-name" onchange="updateAmine('name', this.value)" placeholder="Nom" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                <input type="text" id="edit-amine-img" onchange="updateAmine('img', this.value)" placeholder="URL Image" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                <textarea id="edit-amine-desc" rows="2" onchange="updateAmine('desc', this.value)" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></textarea>
+            </div>
+        </section>
 
-        // 4. Système de connexion basique (Mot de passe : Silas12)
-        function checkPassword() {
-            const input = document.getElementById("password-input").value;
-            if (input === "Silas12") {
-                document.getElementById("login-section").style.display = "none";
-                document.getElementById("admin-dashboard").style.display = "block";
+        <!-- SECTION JOUEURS -->
+        <section id="section-joueurs" class="hidden">
+            <div class="grid grid-cols-3 gap-4 mb-8">
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center"><p class="text-xs font-bold text-slate-400">TOTAL</p><p id="stat-total" class="text-2xl font-black text-white">30</p></div>
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center"><p class="text-xs font-bold text-slate-400">ACTIFS</p><p id="stat-actifs" class="text-2xl font-black text-emerald-400">0</p></div>
+                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center"><p class="text-xs font-bold text-slate-400">RETRAITÉS</p><p id="stat-retraites" class="text-2xl font-black text-slate-500">0</p></div>
+            </div>
+
+            <!-- FORMULAIRE ÉDITION JOUEURS (OFFICIER) -->
+            <div id="players-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-4">
+                <h3 class="text-sm font-bold text-amber-400">✏️ Modifier un Joueur</h3>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-2">
+                    <select id="edit-player-select" onchange="loadPlayerToEdit()" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></select>
+                    <input type="text" id="edit-player-name" placeholder="Pseudo" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <input type="text" id="edit-player-role" placeholder="Rôle / Titre" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <input type="text" id="edit-player-date" placeholder="Date d'arrivée" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <select id="edit-player-status" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                        <option value="actif">Actif</option>
+                        <option value="retraite">Retraité</option>
+                    </select>
+                </div>
+                <button onclick="savePlayerEdit()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Sauvegarder Joueur</button>
+            </div>
+
+            <div id="players-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- SECTION BANQUE (RÉSERVÉE AUX MEMBRES, OFFICIERS & ADMINS) -->
+        <section id="section-banque" class="hidden">
+            <div class="mb-6">
+                <h1 class="text-2xl font-black text-white">🏦 Banque du Royaume</h1>
+                <p class="text-slate-400 text-sm">Gestion du trésor officiel et historique des transactions (Espace réservé).</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-slate-900 border border-amber-500/40 p-5 rounded-2xl text-center shadow-lg bg-gradient-to-b from-amber-500/10 to-transparent">
+                    <p class="text-xs font-bold text-amber-400 tracking-wider">SOLDE ACTUEL</p>
+                    <p id="bank-balance" class="text-3xl font-black text-white mt-1">0k</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl text-center">
+                    <p class="text-xs font-bold text-emerald-400 tracking-wider">TOTAL DES DONS</p>
+                    <p id="bank-total-donations" class="text-2xl font-black text-white mt-1">0k</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl text-center">
+                    <p class="text-xs font-bold text-rose-400 tracking-wider">TOTAL DES DÉPENSES</p>
+                    <p id="bank-total-expenses" class="text-2xl font-black text-white mt-1">0k</p>
+                </div>
+            </div>
+            <div class="mb-8 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h2 class="text-base font-bold text-white mb-4">🏆 Top Donateurs du Royaume</h2>
+                <div id="top-donators-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+            </div>
+            <div id="bank-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-4">
+                <h3 class="text-sm font-bold text-amber-400">➕ Enregistrer une Transaction</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                    <select id="trans-type" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white">
+                        <option value="don">🟢 Don (+)</option>
+                        <option value="depense">🔴 Dépense (-)</option>
+                    </select>
+                    <input type="text" id="trans-actor" placeholder="Pseudo / Motif" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <input type="number" id="trans-amount" placeholder="Montant (k)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <button onclick="addTransaction()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wider">Ajouter</button>
+                </div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h2 class="text-base font-bold text-white mb-4">📜 Historique des Opérations</h2>
+                <div id="bank-transactions-list" class="space-y-2"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FENÊTRE MODALE DE CONNEXION -->
+    <div id="login-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-sm space-y-4 shadow-2xl relative">
+            <h3 id="modal-title" class="text-lg font-black text-white text-center">Connexion</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Identifiant / Pseudo</label>
+                    <input type="text" id="login-user" placeholder="Votre pseudo" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Mot de passe</label>
+                    <input type="password" id="login-pass" placeholder="••••••••" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeLoginModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs">Annuler</button>
+                <button onclick="submitLogin()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs uppercase">Se Connecter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6ZTcoI2VnrLQp9YIomhtG-Q6fIMf5IEI",
+            authDomain: "royaume-illumis.firebaseapp.com",
+            projectId: "royaume-illumis",
+            storageBucket: "royaume-illumis.firebasestorage.app",
+            messagingSenderId: "128365932279",
+            appId: "1:128365932279:web:68a387cf43efce4118edf2",
+            measurementId: "G-FHV0VMBSHH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const dataDocRef = doc(db, "royaume", "siteData");
+
+        window.siteData = {
+            homeData: { title: "Le Royaume Illumis", desc: "Bienvenue sur le portail officiel du Royaume Illumis sur PlasmaCube.", discord: "https://discord.gg/exemple", gallery: ["", "", ""] },
+            vipData: { name: "amine", title: "Bâtisseur du Mois", desc: "A construit la muraille Est.", img: "" },
+            amineData: { name: "amine", desc: "Fondateur et pilier du Royaume Illumis.", img: "" },
+            bankTransactions: [
+                { id: 1, type: "don", actor: "amine", amount: 500, date: "06/09/2026" }
+            ],
+            players: Array.from({ length: 30 }, (_, i) => ({
+                id: i + 1,
+                name: i === 0 ? "amine" : `Joueur_${i + 1}`,
+                role: i === 0 ? "Roi d'Illumis" : "Citoyen",
+                date: "01/01/2026",
+                status: i % 2 === 0 ? "actif" : "retraite",
+                img: ""
+            })),
+            projects: [{ id: 1, title: "Château Royal", desc: "Agrandissement des murailles.", status: "En construction" }],
+            officers: [{ id: 1, user: "officier", pass: "123" }],
+            members: [{ id: 1, user: "membre", pass: "123" }]
+        };
+
+        window.saveDataToFirebase = async function() {
+            try {
+                await setDoc(dataDocRef, window.siteData);
+            } catch (e) {
+                console.error("Erreur de sauvegarde :", e);
+            }
+        };
+
+        onSnapshot(dataDocRef, (docSnap) => {
+            if (docSnap.exists()) {
+                window.siteData = docSnap.data();
+                if (!window.siteData.officers) window.siteData.officers = [{ id: 1, user: "officier", pass: "123" }];
+                if (!window.siteData.members) window.siteData.members = [{ id: 1, user: "membre", pass: "123" }];
+                window.renderAllSections();
             } else {
-                document.getElementById("login-error").style.display = "block";
+                window.saveDataToFirebase();
+            }
+        });
+    </script>
+
+    <script>
+        let isMember = false;
+        let isOfficer = false;
+        let isAdmin = false;
+        let loginTargetRole = 'member';
+
+        function switchTab(tab) {
+            ['accueil', 'projets', 'pantheon', 'joueurs', 'banque'].forEach(t => {
+                const sec = document.getElementById(`section-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (sec) sec.classList.add('hidden');
+                if (btn) btn.className = "px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition";
+            });
+            const activeSec = document.getElementById(`section-${tab}`);
+            const activeBtn = document.getElementById(`tab-btn-${tab}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            if (activeBtn) activeBtn.className = "px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition";
+        }
+
+        /* MODALE & CONNEXION */
+        function openLoginModal(role) {
+            loginTargetRole = role;
+            if (role === 'admin') document.getElementById('modal-title').innerText = "👑 Connexion Admin";
+            else if (role === 'officer') document.getElementById('modal-title').innerText = "🔒 Connexion Officier";
+            else document.getElementById('modal-title').innerText = "🔑 Connexion Membre";
+
+            document.getElementById('login-user').value = '';
+            document.getElementById('login-pass').value = '';
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        function submitLogin() {
+            const user = document.getElementById('login-user').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
+
+            if (loginTargetRole === 'admin') {
+                if (pass === "Silas12") {
+                    isAdmin = true;
+                    isOfficer = true;
+                    isMember = true;
+                    alert("Connexion Admin réussie !");
+                    closeLoginModal();
+                    updateInterfacePermissions();
+                } else {
+                    alert("Mot de passe Admin incorrect !");
+                }
+            } else if (loginTargetRole === 'officer') {
+                const officers = window.siteData.officers || [];
+                const found = officers.find(o => o.user.toLowerCase() === user.toLowerCase() && o.pass === pass);
+                if (found) {
+                    isOfficer = true;
+                    isMember = true;
+                    isAdmin = false;
+                    alert(`Bienvenue Officier ${found.user} !`);
+                    closeLoginModal();
+                    updateInterfacePermissions();
+                } else {
+                    alert("Identifiants Officier incorrects !");
+                }
+            } else {
+                const members = window.siteData.members || [];
+                const found = members.find(m => m.user.toLowerCase() === user.toLowerCase() && m.pass === pass);
+                if (found) {
+                    isMember = true;
+                    isOfficer = false;
+                    isAdmin = false;
+                    alert(`Bienvenue Membre ${found.user} !`);
+                    closeLoginModal();
+                    updateInterfacePermissions();
+                } else {
+                    alert("Identifiants Membre incorrects !");
+                }
             }
         }
 
-        // Lancer le calcul de la banque au chargement de la page
-        calculerBanque();
+        function updateInterfacePermissions() {
+            const banner = document.getElementById('role-banner');
+            const bankBtn = document.getElementById('tab-btn-banque');
+
+            if (isMember || isOfficer || isAdmin) {
+                banner.classList.remove('hidden');
+                bankBtn.classList.remove('hidden'); // Affiche l'accès Banque
+            } else {
+                banner.classList.add('hidden');
+                bankBtn.classList.add('hidden');
+            }
+
+            if (isAdmin) {
+                document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>👑 Admin Connecté (Accès Total)`;
+                document.getElementById('admin-panel').classList.remove('hidden');
+            } else if (isOfficer) {
+                document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>🔒 Officier Connecté`;
+                document.getElementById('admin-panel').classList.add('hidden');
+            } else if (isMember) {
+                document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>🔑 Membre Connecté (Banque Déverrouillée)`;
+                document.getElementById('admin-panel').classList.add('hidden');
+            }
+
+            // Affichage des blocs d'édition Officier/Admin
+            if (isOfficer || isAdmin) {
+                document.getElementById('home-officer-edit').classList.remove('hidden');
+                document.getElementById('bank-officer-edit').classList.remove('hidden');
+                document.getElementById('pantheon-officer-edit').classList.remove('hidden');
+                document.getElementById('players-officer-edit').classList.remove('hidden');
+                document.getElementById('projects-officer-edit').classList.remove('hidden');
+            } else {
+                document.getElementById('home-officer-edit').classList.add('hidden');
+                document.getElementById('bank-officer-edit').classList.add('hidden');
+                document.getElementById('pantheon-officer-edit').classList.add('hidden');
+                document.getElementById('players-officer-edit').classList.add('hidden');
+                document.getElementById('projects-officer-edit').classList.add('hidden');
+            }
+
+            window.renderAllSections();
+        }
+
+        function logoutRole() {
+            isMember = false;
+            isOfficer = false;
+            isAdmin = false;
+            switchTab('accueil');
+            updateInterfacePermissions();
+        }
+
+        /* GESTION COMPTES PAR L'ADMIN */
+        function renderAdminPanel() {
+            // Liste Membres
+            const mList = document.getElementById('members-list');
+            mList.innerHTML = '';
+            (window.siteData.members || []).forEach(m => {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs";
+                item.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-emerald-400">${m.user}</span>
+                        <span class="text-slate-500">• Mdp: <span class="text-slate-300 font-mono">${m.pass}</span></span>
+                    </div>
+                    <button onclick="deleteMemberAccount(${m.id})" class="text-red-400 hover:underline text-[10px]">Supprimer</button>
+                `;
+                mList.appendChild(item);
+            });
+
+            // Liste Officiers
+            const oList = document.getElementById('officers-list');
+            oList.innerHTML = '';
+            (window.siteData.officers || []).forEach(o => {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs";
+                item.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-amber-400">${o.user}</span>
+                        <span class="text-slate-500">• Mdp: <span class="text-slate-300 font-mono">${o.pass}</span></span>
+                    </div>
+                    <button onclick="deleteOfficerAccount(${o.id})" class="text-red-400 hover:underline text-[10px]">Supprimer</button>
+                `;
+                oList.appendChild(item);
+            });
+        }
+
+        function addMemberAccount() {
+            const user = document.getElementById('new-member-user').value.trim();
+            const pass = document.getElementById('new-member-pass').value.trim();
+            if (!user || !pass) return alert("Champs invalides");
+
+            if (!window.siteData.members) window.siteData.members = [];
+            window.siteData.members.push({ id: Date.now(), user, pass });
+            document.getElementById('new-member-user').value = '';
+            document.getElementById('new-member-pass').value = '';
+            window.saveDataToFirebase();
+        }
+
+        function deleteMemberAccount(id) {
+            window.siteData.members = window.siteData.members.filter(m => m.id !== id);
+            window.saveDataToFirebase();
+        }
+
+        function addOfficerAccount() {
+            const user = document.getElementById('new-officer-user').value.trim();
+            const pass = document.getElementById('new-officer-pass').value.trim();
+            if (!user || !pass) return alert("Champs invalides");
+
+            if (!window.siteData.officers) window.siteData.officers = [];
+            window.siteData.officers.push({ id: Date.now(), user, pass });
+            document.getElementById('new-officer-user').value = '';
+            document.getElementById('new-officer-pass').value = '';
+            window.saveDataToFirebase();
+        }
+
+        function deleteOfficerAccount(id) {
+            window.siteData.officers = window.siteData.officers.filter(o => o.id !== id);
+            window.saveDataToFirebase();
+        }
+
+        /* RENDU ACCUEIL */
+        function renderHome() {
+            const h = window.siteData.homeData || {};
+            const v = window.siteData.vipData || {};
+            document.getElementById('home-title').innerText = h.title || '';
+            document.getElementById('home-desc').innerText = h.desc || '';
+            document.getElementById('discord-link').href = h.discord || '#';
+            document.getElementById('vip-name').innerText = v.name || '';
+            document.getElementById('vip-title').innerText = v.title || '';
+            document.getElementById('vip-desc').innerText = `"${v.desc || ''}"`;
+
+            const vipImgBox = document.getElementById('vip-img-box');
+            const avatarUrl = v.img || `https://crafthead.net/avatar/${v.name || 'steve'}`;
+            vipImgBox.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+
+            const galleryContainer = document.getElementById('home-gallery');
+            galleryContainer.innerHTML = '';
+            (h.gallery || ["", "", ""]).forEach((url, i) => {
+                const box = document.createElement('div');
+                box.className = "h-48 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center overflow-hidden";
+                box.innerHTML = url ? `<img src="${url}" class="w-full h-full object-cover">` : `<span class="text-xs font-bold text-slate-600">PHOTO ${i + 1}</span>`;
+                galleryContainer.appendChild(box);
+            });
+
+            document.getElementById('edit-home-title').value = h.title || '';
+            document.getElementById('edit-home-desc').value = h.desc || '';
+            document.getElementById('edit-home-discord').value = h.discord || '';
+            document.getElementById('edit-vip-name').value = v.name || '';
+            document.getElementById('edit-vip-title').value = v.title || '';
+            document.getElementById('edit-vip-img').value = v.img || '';
+            document.getElementById('edit-vip-desc').value = v.desc || '';
+
+            if (isAdmin) renderAdminPanel();
+        }
+
+        function updateHome(field, val) {
+            window.siteData.homeData[field] = val;
+            window.saveDataToFirebase();
+        }
+
+        function updateVip(field, val) {
+            window.siteData.vipData[field] = val;
+            window.saveDataToFirebase();
+        }
+
+        /* RENDU BANQUE */
+        function renderBank() {
+            let totalDons = 0; let totalDepenses = 0; let donatorsMap = {};
+            const list = document.getElementById('bank-transactions-list');
+            list.innerHTML = '';
+
+            (window.siteData.bankTransactions || []).forEach(t => {
+                if (t.type === 'don') {
+                    totalDons += t.amount;
+                    donatorsMap[t.actor] = (donatorsMap[t.actor] || 0) + t.amount;
+                } else {
+                    totalDepenses += t.amount;
+                }
+
+                const isDon = t.type === 'don';
+                const row = document.createElement('div');
+                row.className = `flex justify-between items-center p-3 rounded-xl border ${isDon ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-rose-500/5 border-rose-500/20'}`;
+                row.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs px-2 py-1 rounded-lg font-bold uppercase ${isDon ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">
+                            ${isDon ? 'DON' : 'DÉPENSE'}
+                        </span>
+                        <div>
+                            <p class="text-sm font-bold text-white">${t.actor}</p>
+                            <p class="text-[10px] text-slate-400">${t.date}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-sm font-black ${isDon ? 'text-emerald-400' : 'text-rose-400'}">
+                            ${isDon ? '+' : '-'}${t.amount}k
+                        </span>
+                        ${isOfficer ? `<button onclick="deleteTransaction(${t.id})" class="text-red-400 text-xs hover:underline">Supprimer</button>` : ''}
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+
+            document.getElementById('bank-balance').innerText = `${totalDons - totalDepenses}k`;
+            document.getElementById('bank-total-donations').innerText = `${totalDons}k`;
+            document.getElementById('bank-total-expenses').innerText = `${totalDepenses}k`;
+
+            const sorted = Object.entries(donatorsMap).sort((a, b) => b[1] - a[1]).slice(0, 3);
+            const topList = document.getElementById('top-donators-list');
+            topList.innerHTML = '';
+            const medals = ['🥇', '🥈', '🥉'];
+            sorted.forEach(([name, amount], i) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-950/60 border border-slate-800 p-3 rounded-xl flex items-center justify-between";
+                card.innerHTML = `<div class="flex items-center gap-2"><span class="text-lg">${medals[i]}</span><span class="text-xs font-bold text-white">${name}</span></div><span class="text-xs font-black text-amber-400">${amount}k</span>`;
+                topList.appendChild(card);
+            });
+        }
+
+        function addTransaction() {
+            const type = document.getElementById('trans-type').value;
+            const actor = document.getElementById('trans-actor').value.trim();
+            const amount = parseFloat(document.getElementById('trans-amount').value);
+
+            if (!actor || isNaN(amount) || amount <= 0) return alert("Champs invalides");
+
+            window.siteData.bankTransactions.unshift({
+                id: Date.now(), type, actor, amount, date: new Date().toLocaleDateString('fr-FR')
+            });
+            document.getElementById('trans-actor').value = '';
+            document.getElementById('trans-amount').value = '';
+            window.saveDataToFirebase();
+        }
+
+        function deleteTransaction(id) {
+            window.siteData.bankTransactions = window.siteData.bankTransactions.filter(t => t.id !== id);
+            window.saveDataToFirebase();
+        }
+
+        /* RENDU PANTHÉON */
+        function renderPantheon() {
+            const a = window.siteData.amineData || {};
+            document.getElementById('pantheon-amine-name').innerText = a.name || 'amine';
+            document.getElementById('pantheon-amine-desc').innerText = a.desc || '';
+            const imgBox = document.getElementById('pantheon-amine-img');
+            const avatarUrl = a.img || `https://crafthead.net/avatar/${a.name || 'amine'}`;
+            imgBox.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+
+            document.getElementById('edit-amine-name').value = a.name || '';
+            document.getElementById('edit-amine-desc').value = a.desc || '';
+            document.getElementById('edit-amine-img').value = a.img || '';
+        }
+
+        function updateAmine(field, val) {
+            window.siteData.amineData[field] = val;
+            window.saveDataToFirebase();
+        }
+
+        /* RENDU JOUEURS */
+        function renderCards() {
+            const grid = document.getElementById('players-grid');
+            const select = document.getElementById('edit-player-select');
+            grid.innerHTML = '';
+            select.innerHTML = '';
+
+            let totalActifs = 0; let totalRetraites = 0;
+
+            (window.siteData.players || []).forEach(p => {
+                const isActif = p.status === 'actif';
+                if (isActif) totalActifs++; else totalRetraites++;
+
+                const avatarUrl = p.img || `https://crafthead.net/avatar/${p.name}`;
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center gap-4 relative overflow-hidden shadow-md";
+                card.innerHTML = `
+                    <img src="${avatarUrl}" class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 object-cover shrink-0">
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-1">
+                            <h3 class="text-sm font-bold text-white truncate">${p.name}</h3>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${isActif ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-500 border border-slate-700'}">
+                                ${isActif ? 'Actif' : 'Retraité'}
+                            </span>
+                        </div>
+                        <p class="text-xs text-amber-400 font-semibold truncate mt-0.5">${p.role}</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Arrivé le ${p.date}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = p.name;
+                select.appendChild(option);
+            });
+
+            document.getElementById('stat-total').innerText = (window.siteData.players || []).length;
+            document.getElementById('stat-actifs').innerText = totalActifs;
+            document.getElementById('stat-retraites').innerText = totalRetraites;
+            loadPlayerToEdit();
+        }
+
+        function loadPlayerToEdit() {
+            const id = parseInt(document.getElementById('edit-player-select').value);
+            const player = (window.siteData.players || []).find(p => p.id === id);
+            if (player) {
+                document.getElementById('edit-player-name').value = player.name;
+                document.getElementById('edit-player-role').value = player.role;
+                document.getElementById('edit-player-date').value = player.date;
+                document.getElementById('edit-player-status').value = player.status;
+            }
+        }
+
+        function savePlayerEdit() {
+            const id = parseInt(document.getElementById('edit-player-select').value);
+            const player = (window.siteData.players || []).find(p => p.id === id);
+            if (player) {
+                player.name = document.getElementById('edit-player-name').value;
+                player.role = document.getElementById('edit-player-role').value;
+                player.date = document.getElementById('edit-player-date').value;
+                player.status = document.getElementById('edit-player-status').value;
+                window.saveDataToFirebase();
+            }
+        }
+
+        /* RENDU PROJETS */
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            grid.innerHTML = '';
+            (window.siteData.projects || []).forEach(pj => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <h3 class="text-base font-bold text-white">${pj.title}</h3>
+                            <span class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold">${pj.status}</span>
+                        </div>
+                        <p class="text-xs text-slate-400">${pj.desc}</p>
+                    </div>
+                    ${isOfficer ? `<button onclick="deleteProject(${pj.id})" class="text-red-400 text-xs mt-4 text-left hover:underline">Supprimer</button>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function addProject() {
+            const title = document.getElementById('new-proj-title').value.trim();
+            const status = document.getElementById('new-proj-status').value.trim();
+            const desc = document.getElementById('new-proj-desc').value.trim();
+            if (!title) return;
+
+            window.siteData.projects.push({ id: Date.now(), title, status, desc });
+            document.getElementById('new-proj-title').value = '';
+            document.getElementById('new-proj-status').value = '';
+            document.getElementById('new-proj-desc').value = '';
+            window.saveDataToFirebase();
+        }
+
+        function deleteProject(id) {
+            window.siteData.projects = window.siteData.projects.filter(p => p.id !== id);
+            window.saveDataToFirebase();
+        }
+
+        window.renderAllSections = function() {
+            renderHome();
+            renderBank();
+            renderPantheon();
+            renderCards();
+            renderProjects();
+        }
     </script>
 </body>
 </html>
