@@ -24,13 +24,14 @@
             
             <nav class="flex flex-wrap gap-2">
                 <button onclick="switchTab('accueil')" id="tab-btn-accueil" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition">Accueil</button>
-                <button onclick="switchTab('projets')" id="tab-btn-projets" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Projets</button>
+                <button onclick="switchTab('projets')" id="tab-btn-projets" class="hidden px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Projets</button>
                 <button onclick="switchTab('quetes')" id="tab-btn-quetes" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">📜 Quêtes</button>
+                <button onclick="switchTab('points')" id="tab-btn-points" class="px-4 py-2 rounded-xl bg-slate-800 text-amber-400 border border-amber-500/30 font-bold text-sm hover:text-white transition">⭐ Points</button>
                 <button onclick="switchTab('pantheon')" id="tab-btn-pantheon" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">🏛️ Panthéon</button>
                 <button onclick="switchTab('joueurs')" id="tab-btn-joueurs" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Joueurs</button>
-                <!-- BANQUE (MASQUÉE PAR DÉFAUT / VISIBLE SEULEMENT SI CONNECTÉ) -->
+                <!-- BANQUE (ACCESSIBLE SEULEMENT AUX MEMBRES) -->
                 <button onclick="switchTab('banque')" id="tab-btn-banque" class="hidden px-4 py-2 rounded-xl bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold text-sm hover:text-white transition">🏦 Banque</button>
-                <!-- LOGS & ANALYSES (MASQUÉ, APPARAÎT À GAUCHE UNIQUEMENT POUR L'ADMIN) -->
+                <!-- LOGS & ANALYSES (ADMIN UNIQUEMENT) -->
                 <button onclick="switchTab('logs')" id="tab-btn-logs" class="hidden px-4 py-2 rounded-xl bg-slate-800 text-purple-400 border border-purple-500/30 font-bold text-sm hover:text-white transition">📊 Logs & Analyses</button>
             </nav>
         </div>
@@ -123,13 +124,12 @@
                 </div>
             </div>
 
-            <!-- PANNEAU ADMIN : GESTION DES COMPTES (MEMBRES ET OFFICIER) -->
+            <!-- PANNEAU ADMIN : GESTION DES COMPTES -->
             <div id="admin-panel" class="hidden bg-slate-900 border border-purple-500/40 p-6 rounded-2xl space-y-6 mb-8">
                 <h3 class="text-sm font-bold text-purple-400 flex items-center gap-2">👑 Panneau Administration (Comptes)</h3>
                 
-                <!-- CRÉATION / LISTE MEMBRES -->
                 <div class="space-y-3">
-                    <h4 class="text-xs font-bold text-emerald-400">🟢 Comptes Membres (Accès Banque & Fonctions réservées)</h4>
+                    <h4 class="text-xs font-bold text-emerald-400">🟢 Comptes Membres</h4>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                         <input type="text" id="new-member-user" placeholder="Pseudo Membre" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
                         <input type="text" id="new-member-pass" placeholder="Mot de passe" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
@@ -138,9 +138,8 @@
                     <div id="members-list" class="space-y-2 pt-2"></div>
                 </div>
 
-                <!-- CRÉATION / LISTE OFFICIERS -->
                 <div class="border-t border-slate-800 pt-4 space-y-3">
-                    <h4 class="text-xs font-bold text-amber-400">🟡 Comptes Officiers (Accès Édition + Banque)</h4>
+                    <h4 class="text-xs font-bold text-amber-400">🟡 Comptes Officiers</h4>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
                         <input type="text" id="new-officer-user" placeholder="Pseudo Officier" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
                         <input type="text" id="new-officer-pass" placeholder="Mot de passe" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
@@ -150,7 +149,7 @@
                 </div>
             </div>
 
-            <!-- BOUTONS D'ACCÈS EN BAS DE PAGE -->
+            <!-- BOUTONS D'ACCÈS -->
             <div class="border-t border-slate-800 pt-6 flex flex-wrap justify-center gap-4">
                 <button onclick="openLoginModal('member')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 font-bold text-xs transition flex items-center gap-2">
                     🔑 Espace Membre
@@ -164,8 +163,12 @@
             </div>
         </section>
 
-        <!-- SECTION PROJETS -->
+        <!-- SECTION PROJETS (ACCESSIBLE SEULEMENT AUX MEMBRES) -->
         <section id="section-projets" class="hidden">
+            <div class="mb-6">
+                <h1 class="text-2xl font-black text-white">🏗️ Projets du Royaume</h1>
+                <p class="text-slate-400 text-sm">Chantiers en cours et planifications (Espace Membres & Officiers).</p>
+            </div>
             <div id="projects-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-3">
                 <h3 class="text-sm font-bold text-amber-400">➕ Ajouter un Projet</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -180,25 +183,73 @@
 
         <!-- SECTION QUÊTES & MISSIONS -->
         <section id="section-quetes" class="hidden">
-            <div class="mb-6">
-                <h1 class="text-2xl font-black text-white">📜 Quêtes & Missions du Royaume</h1>
-                <p class="text-slate-400 text-sm">Objectifs en cours, ressources à collecter et tâches assignées aux membres.</p>
+            <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-2xl font-black text-white">📜 Quêtes & Missions du Royaume</h1>
+                    <p class="text-slate-400 text-sm">Accomplissez des missions pour gagner des points et aider le royaume.</p>
+                </div>
+                <button onclick="openProofsPanel()" id="proofs-badge-btn" class="hidden bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                    📥 Voir les preuves envoyées <span id="proofs-count-badge" class="bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+                </button>
             </div>
+
+            <!-- FORMULAIRE CRÉATION QUÊTE (OFFICIER) AVEC /POINTS -->
             <div id="quests-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-3">
-                <h3 class="text-sm font-bold text-amber-400">➕ Ajouter une Quête / Mission</h3>
+                <h3 class="text-sm font-bold text-amber-400">➕ Créer une Quête & Définir ses Points</h3>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
                     <input type="text" id="new-quest-title" placeholder="Titre de la quête" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
                     <input type="text" id="new-quest-reward" placeholder="Récompense (ex: 100k / Grade)" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <select id="new-quest-status" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                        <option value="À faire">À faire</option>
-                        <option value="En cours">En cours</option>
-                        <option value="Terminée">Terminée</option>
-                    </select>
-                    <button onclick="addQuest()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Ajouter Quête</button>
+                    <input type="text" id="new-quest-points" placeholder="Ex: /points 100 (ou juste 100)" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <button onclick="addQuest()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Créer Quête</button>
                 </div>
                 <textarea id="new-quest-desc" placeholder="Description de la mission et ressources nécessaires..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></textarea>
             </div>
+            
             <div id="quests-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- SECTION POINTS & AVERTISSEMENTS -->
+        <section id="section-points" class="hidden">
+            <div class="mb-6">
+                <h1 class="text-2xl font-black text-white">⭐ Système de Points & Avertissements</h1>
+                <p class="text-slate-400 text-sm">Suivi des points des membres, barème officiel et gestion des sanctions.</p>
+            </div>
+
+            <!-- BARÈME OFFICIEL -->
+            <div class="mb-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                <h3 class="text-base font-bold text-amber-400">📊 Barème Officiel des Points</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <span class="font-bold text-emerald-400 block mb-1">🏦 Dons en Banque</span>
+                        <p class="text-slate-300">1k mis dans la banque = <strong>10 Points</strong> (attribué automatiquement).</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <span class="font-bold text-amber-400 block mb-1">📜 Quêtes & Missions</span>
+                        <p class="text-slate-300">Points variables définis par les officiers lors de la création de la quête.</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                        <span class="font-bold text-rose-400 block mb-1">⚠️ Zone Rouge & Avertissements</span>
+                        <p class="text-slate-300">Moins de 50 points = <strong>Avertissement</strong> / Joueur dans le rouge.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GESTION MANUELLE POINTS (OFFICIER) -->
+            <div id="points-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-3">
+                <h3 class="text-sm font-bold text-amber-400">⚙️ Ajuster les points d'un joueur ou mettre un avertissement</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                    <input type="text" id="adj-point-name" placeholder="Pseudo du joueur" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <input type="number" id="adj-point-val" placeholder="Valeur (+ ou - points)" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <input type="text" id="adj-point-reason" placeholder="Raison / Avertissement" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <button onclick="adjustMemberPoints()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Appliquer</button>
+                </div>
+            </div>
+
+            <!-- CLASSEMENT DES POINTS -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <h3 class="text-base font-bold text-white mb-4">🏆 Tableau des Points & Statuts</h3>
+                <div id="points-ranking-list" class="space-y-2"></div>
+            </div>
         </section>
 
         <!-- SECTION PANTHÉON -->
@@ -248,11 +299,11 @@
             <div id="players-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
-        <!-- SECTION BANQUE (RÉSERVÉE AUX MEMBRES, OFFICIERS & ADMINS) -->
+        <!-- SECTION BANQUE (ACCESSIBLE SEULEMENT AUX MEMBRES) -->
         <section id="section-banque" class="hidden">
             <div class="mb-6">
                 <h1 class="text-2xl font-black text-white">🏦 Banque du Royaume</h1>
-                <p class="text-slate-400 text-sm">Gestion du trésor officiel et historique des transactions (Espace réservé).</p>
+                <p class="text-slate-400 text-sm">Gestion du trésor officiel. (Chaque don ajoute automatiquement des points au joueur : 1k = 10 pts).</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <div class="bg-slate-900 border border-amber-500/40 p-5 rounded-2xl text-center shadow-lg bg-gradient-to-b from-amber-500/10 to-transparent">
@@ -273,7 +324,7 @@
                 <div id="top-donators-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
             </div>
             <div id="bank-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-4">
-                <h3 class="text-sm font-bold text-amber-400">➕ Enregistrer une Transaction</h3>
+                <h3 class="text-sm font-bold text-amber-400">➕ Enregistrer une Transaction (Attribution auto des points si don)</h3>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                     <select id="trans-type" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white">
                         <option value="don">🟢 Don (+)</option>
@@ -290,12 +341,12 @@
             </div>
         </section>
 
-        <!-- SECTION LOGS & ANALYSES (RÉSERVÉE À L'ADMIN) -->
+        <!-- SECTION LOGS & ANALYSES (ADMIN UNIQUEMENT) -->
         <section id="section-logs" class="hidden">
             <div class="mb-6 flex justify-between items-center">
                 <div>
                     <h1 class="text-2xl font-black text-white">📊 Logs & Analyses du Royaume</h1>
-                    <p class="text-slate-400 text-sm">Suivi complet des activités, modifications et connexions (Espace Administrateur).</p>
+                    <p class="text-slate-400 text-sm">Suivi complet des activités et modifications (Espace Administrateur).</p>
                 </div>
                 <button onclick="clearLogs()" class="bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 px-4 py-2 rounded-xl text-xs font-bold transition">Vider les logs</button>
             </div>
@@ -306,7 +357,7 @@
 
     </main>
 
-    <!-- FENÊTRE MODALE DE CONNEXION -->
+    <!-- MODALE DE CONNEXION -->
     <div id="login-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-sm space-y-4 shadow-2xl relative">
             <h3 id="modal-title" class="text-lg font-black text-white text-center">Connexion</h3>
@@ -324,6 +375,40 @@
                 <button onclick="closeLoginModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs">Annuler</button>
                 <button onclick="submitLogin()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs uppercase">Se Connecter</button>
             </div>
+        </div>
+    </div>
+
+    <!-- MODALE SOUMISSION PREUVE QUÊTE -->
+    <div id="proof-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md space-y-4 shadow-2xl relative">
+            <h3 class="text-lg font-black text-white text-center">📸 Soumettre une preuve de quête</h3>
+            <p id="proof-modal-quest-title" class="text-xs text-amber-400 font-bold text-center"></p>
+            <input type="hidden" id="proof-quest-id">
+            <div class="space-y-3">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">Votre Pseudo</label>
+                    <input type="text" id="proof-user" placeholder="Votre pseudo en jeu" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase">URL de la photo (Preuve)</label>
+                    <input type="text" id="proof-img-url" placeholder="https://imgur.com/... ou lien direct image" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                </div>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeProofModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs">Annuler</button>
+                <button onclick="submitProof()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs uppercase">Envoyer la preuve</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE PANEL OFFICIERS : VOIR LES PREUVES -->
+    <div id="proofs-panel-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-2xl space-y-4 shadow-2xl relative max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-black text-white">📥 Panel Officiers : Preuves de Quêtes Soumises</h3>
+                <button onclick="closeProofsPanel()" class="text-slate-400 hover:text-white font-bold text-sm">✕</button>
+            </div>
+            <div id="proofs-list-container" class="space-y-3 overflow-y-auto flex-1 pr-1"></div>
         </div>
     </div>
 
@@ -359,10 +444,13 @@
                 role: i === 0 ? "Roi d'Illumis" : "Citoyen",
                 date: "01/01/2026",
                 status: i % 2 === 0 ? "actif" : "retraite",
+                points: i === 0 ? 5000 : 40, // Point de départ bas pour tester la zone rouge (<50)
+                warnings: i === 0 ? 0 : 1,
                 img: ""
             })),
             projects: [{ id: 1, title: "Château Royal", desc: "Agrandissement des murailles.", status: "En construction" }],
-            quests: [{ id: 1, title: "Farm de Pierre", desc: "Récolter 2 double coffres de pierre cobblestone.", reward: "50k", status: "En cours" }],
+            quests: [{ id: 1, title: "Farm de Pierre", desc: "Récolter 2 double coffres de pierre cobblestone.", reward: "50k", points: 100, status: "En cours" }],
+            proofs: [],
             officers: [{ id: 1, user: "officier", pass: "123" }],
             members: [{ id: 1, user: "membre", pass: "123" }],
             logs: []
@@ -385,6 +473,7 @@
                     players: cloudData.players || window.siteData.players,
                     projects: cloudData.projects || window.siteData.projects,
                     quests: cloudData.quests || window.siteData.quests,
+                    proofs: cloudData.proofs || window.siteData.proofs,
                     bankTransactions: cloudData.bankTransactions || window.siteData.bankTransactions,
                     officers: cloudData.officers || window.siteData.officers,
                     members: cloudData.members || window.siteData.members,
@@ -403,7 +492,7 @@
         let isAdmin = false;
         let loginTargetRole = 'member';
 
-        // Simulation dynamique du widget PlasmaCube
+        // Widget Statut Serveur PlasmaCube
         function fetchPlasmaCubeStatus() {
             fetch('https://api.mcsrvstat.us/3/play.plasmacube.net')
                 .then(res => res.json())
@@ -435,13 +524,13 @@
         }
 
         function switchTab(tab) {
-            ['accueil', 'projets', 'quetes', 'pantheon', 'joueurs', 'banque', 'logs'].forEach(t => {
+            ['accueil', 'projets', 'quetes', 'points', 'pantheon', 'joueurs', 'banque', 'logs'].forEach(t => {
                 const sec = document.getElementById(`section-${t}`);
                 const btn = document.getElementById(`tab-btn-${t}`);
                 if (sec) sec.classList.add('hidden');
-                if (btn && t !== 'logs' && t !== 'banque') {
+                if (btn && t !== 'logs' && t !== 'banque' && t !== 'projets') {
                     btn.className = "px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition";
-                } else if (btn && t === 'banque') {
+                } else if (btn && (t === 'banque' || t === 'projets')) {
                     btn.className = "hidden px-4 py-2 rounded-xl bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold text-sm hover:text-white transition";
                     if (isMember || isOfficer || isAdmin) btn.classList.remove('hidden');
                 } else if (btn && t === 'logs') {
@@ -455,7 +544,7 @@
             if (activeBtn) {
                 if (tab === 'logs') {
                     activeBtn.className = "px-4 py-2 rounded-xl bg-purple-600 text-white font-bold text-sm transition";
-                } else if (tab === 'banque') {
+                } else if (tab === 'banque' || tab === 'projets') {
                     activeBtn.className = "px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm transition";
                 } else {
                     activeBtn.className = "px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition";
@@ -530,14 +619,17 @@
         function updateInterfacePermissions() {
             const banner = document.getElementById('role-banner');
             const bankBtn = document.getElementById('tab-btn-banque');
+            const projBtn = document.getElementById('tab-btn-projets');
             const logsBtn = document.getElementById('tab-btn-logs');
 
             if (isMember || isOfficer || isAdmin) {
                 banner.classList.remove('hidden');
                 bankBtn.classList.remove('hidden');
+                projBtn.classList.remove('hidden');
             } else {
                 banner.classList.add('hidden');
                 bankBtn.classList.add('hidden');
+                projBtn.classList.add('hidden');
             }
 
             if (isAdmin) {
@@ -546,14 +638,13 @@
                 logsBtn.classList.remove('hidden');
             } else {
                 logsBtn.classList.add('hidden');
+                document.getElementById('admin-panel').classList.add('hidden');
             }
 
             if (isOfficer) {
                 document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>🔒 Officier Connecté`;
-                if (!isAdmin) document.getElementById('admin-panel').classList.add('hidden');
             } else if (isMember && !isOfficer && !isAdmin) {
-                document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>🔑 Membre Connecté (Banque Déverrouillée)`;
-                document.getElementById('admin-panel').classList.add('hidden');
+                document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>🔑 Membre Connecté (Banque & Projets Déverrouillés)`;
             }
 
             if (isOfficer || isAdmin) {
@@ -563,6 +654,8 @@
                 document.getElementById('players-officer-edit').classList.remove('hidden');
                 document.getElementById('projects-officer-edit').classList.remove('hidden');
                 document.getElementById('quests-officer-edit').classList.remove('hidden');
+                document.getElementById('points-officer-edit').classList.remove('hidden');
+                document.getElementById('proofs-badge-btn').classList.remove('hidden');
             } else {
                 document.getElementById('home-officer-edit').classList.add('hidden');
                 document.getElementById('bank-officer-edit').classList.add('hidden');
@@ -570,6 +663,8 @@
                 document.getElementById('players-officer-edit').classList.add('hidden');
                 document.getElementById('projects-officer-edit').classList.add('hidden');
                 document.getElementById('quests-officer-edit').classList.add('hidden');
+                document.getElementById('points-officer-edit').classList.add('hidden');
+                document.getElementById('proofs-badge-btn').classList.add('hidden');
             }
 
             window.renderAllSections();
@@ -654,7 +749,7 @@
             window.saveDataToFirebase();
         }
 
-        /* RENDU LOGS & ANALYSES */
+        /* LOGS */
         function renderLogs() {
             const container = document.getElementById('logs-container');
             container.innerHTML = '';
@@ -669,12 +764,12 @@
                 let badgeColor = "bg-slate-800 text-slate-300 border-slate-700";
                 let label = "ACTIVITÉ";
 
-                if (l.type === 'annonce') { badgeColor = "bg-amber-500/20 text-amber-400 border-amber-500/30"; label = "ANNONCE / ACCUEIL"; }
+                if (l.type === 'annonce') { badgeColor = "bg-amber-500/20 text-amber-400 border-amber-500/30"; label = "ANNONCE"; }
                 else if (l.type === 'projet') { badgeColor = "bg-blue-500/20 text-blue-400 border-blue-500/30"; label = "PROJET"; }
                 else if (l.type === 'quete') { badgeColor = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"; label = "QUÊTE"; }
-                else if (l.type === 'joueur') { badgeColor = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"; label = "JOUEUR"; }
+                else if (l.type === 'points') { badgeColor = "bg-amber-500/20 text-amber-400 border-amber-500/30"; label = "POINTS"; }
                 else if (l.type === 'connexion_membre') { badgeColor = "bg-teal-500/20 text-teal-400 border-teal-500/30"; label = "CO MEMBRE"; }
-                else if (l.type === 'connexion_officier') { badgeColor = "bg-purple-500/20 text-purple-400 border-purple-500/30"; label = "CO OFFICIER/ADMIN"; }
+                else if (l.type === 'connexion_officier') { badgeColor = "bg-purple-500/20 text-purple-400 border-purple-500/30"; label = "CO OFFICIER"; }
 
                 const row = document.createElement('div');
                 row.className = "flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-950 p-3 rounded-xl border border-slate-800 gap-2";
@@ -697,7 +792,7 @@
             }
         }
 
-        /* RENDU ACCUEIL */
+        /* ACCUEIL */
         function renderHome() {
             const h = window.siteData.homeData || {};
             const v = window.siteData.vipData || {};
@@ -744,7 +839,7 @@
             window.saveDataToFirebase();
         }
 
-        /* RENDU BANQUE */
+        /* BANQUE + ATTRIBUTION AUTO POINTS (1k = 10 pts) */
         function renderBank() {
             let totalDons = 0; let totalDepenses = 0; let donatorsMap = {};
             const list = document.getElementById('bank-transactions-list');
@@ -808,6 +903,29 @@
             window.siteData.bankTransactions.unshift({
                 id: Date.now(), type, actor, amount, date: new Date().toLocaleDateString('fr-FR')
             });
+
+            // SI C'EST UN DON -> ATTRIBUTION AUTOMATIQUE DE POINTS (1k = 10 points)
+            if (type === 'don') {
+                const pointsEarned = amount * 10;
+                let player = (window.siteData.players || []).find(p => p.name.toLowerCase() === actor.toLowerCase());
+                if (player) {
+                    player.points = (player.points || 0) + pointsEarned;
+                } else {
+                    // Si le joueur n'est pas dans la liste, on le crée automatiquement
+                    window.siteData.players.push({
+                        id: Date.now(),
+                        name: actor,
+                        role: "Citoyen",
+                        date: new Date().toLocaleDateString('fr-FR'),
+                        status: "actif",
+                        points: pointsEarned,
+                        warnings: 0,
+                        img: ""
+                    });
+                }
+                logAction('points', `Attribution automatique de ${pointsels = pointsEarned} points à ${actor} suite à un don de ${amount}k`);
+            }
+
             document.getElementById('trans-actor').value = '';
             document.getElementById('trans-amount').value = '';
             logAction('autre', `Transaction bancaire (${type}) de ${amount}k par ${actor}`);
@@ -820,10 +938,98 @@
             window.saveDataToFirebase();
         }
 
-        /* RENDU QUÊTES */
+        /* GESTION DES POINTS & AVERTISSEMENTS */
+        function renderPoints() {
+            const list = document.getElementById('points-ranking-list');
+            list.innerHTML = '';
+
+            // Tri par points décroissants
+            const sortedPlayers = [...(window.siteData.players || [])].sort((a, b) => (b.points || 0) - (a.points || 0));
+
+            sortedPlayers.forEach(p => {
+                const pts = p.points || 0;
+                const warns = p.warnings || 0;
+                const isInRed = pts < 50;
+
+                const row = document.createElement('div');
+                row.className = `flex flex-col md:flex-row justify-between items-start md:items-center p-3.5 rounded-xl border ${isInRed ? 'bg-rose-500/10 border-rose-500/40 animate-pulse' : 'bg-slate-950 border-slate-800'}`;
+                row.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <img src="${p.img || 'https://crafthead.net/avatar/' + p.name}" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 object-cover">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-bold text-white">${p.name}</span>
+                                ${isInRed ? '<span class="text-[10px] bg-rose-500 text-slate-950 px-2 py-0.5 rounded-full font-black">⚠️ DANS LE ROUGE (< 50 pts)</span>' : ''}
+                            </div>
+                            <p class="text-[10px] text-slate-400">Avertissements : <span class="text-rose-400 font-bold">${warns}</span></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 mt-2 md:mt-0">
+                        <span class="text-sm font-black text-amber-400">${pts} Points</span>
+                        ${isOfficer ? `
+                            <div class="flex gap-1">
+                                <button onclick="quickAddPoints('${p.name}', 50)" class="bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 px-2.5 py-1 rounded-lg text-[10px] font-bold">+50 pts</button>
+                                <button onclick="quickAddPoints('${p.name}', -50)" class="bg-rose-600/20 border border-rose-500/30 text-rose-400 px-2.5 py-1 rounded-lg text-[10px] font-bold">-50 pts</button>
+                                <button onclick="giveWarning('${p.name}')" class="bg-amber-600/20 border border-amber-500/30 text-amber-400 px-2.5 py-1 rounded-lg text-[10px] font-bold">⚠️ Avertir</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function adjustMemberPoints() {
+            const name = document.getElementById('adj-point-name').value.trim();
+            const val = parseInt(document.getElementById('adj-point-val').value);
+            const reason = document.getElementById('adj-point-reason').value.trim();
+
+            if (!name || isNaN(val)) return alert("Veuillez remplir un pseudo et une valeur de points valide !");
+
+            let player = (window.siteData.players || []).find(p => p.name.toLowerCase() === name.toLowerCase());
+            if (!player) return alert("Joueur introuvable dans la liste !");
+
+            player.points = (player.points || 0) + val;
+            if (val < 0 && reason.toLowerCase().includes('avertissement')) {
+                player.warnings = (player.warnings || 0) + 1;
+            }
+
+            document.getElementById('adj-point-name').value = '';
+            document.getElementById('adj-point-val').value = '';
+            document.getElementById('adj-point-reason').value = '';
+
+            logAction('points', `Ajustement de ${val} points pour ${name} (${reason || 'Ajustement manuel'})`);
+            window.saveDataToFirebase();
+        }
+
+        function quickAddPoints(name, val) {
+            let player = (window.siteData.players || []).find(p => p.name.toLowerCase() === name.toLowerCase());
+            if (player) {
+                player.points = (player.points || 0) + val;
+                logAction('points', `Ajustement rapide de ${val} pts pour ${name}`);
+                window.saveDataToFirebase();
+            }
+        }
+
+        function giveWarning(name) {
+            let player = (window.siteData.players || []).find(p => p.name.toLowerCase() === name.toLowerCase());
+            if (player) {
+                player.warnings = (player.warnings || 0) + 1;
+                player.points = Math.max(0, (player.points || 0) - 50); // Retire 50 points par avertissement
+                logAction('points', `⚠️ Avertissement attribué à ${name} (-50 points)`);
+                window.saveDataToFirebase();
+            }
+        }
+
+        /* QUÊTES & PREUVES */
         function renderQuests() {
             const grid = document.getElementById('quests-grid');
             grid.innerHTML = '';
+            
+            // Met à jour le badge du nombre de preuves en attente pour les officiers
+            const proofsCount = (window.siteData.proofs || []).filter(p => !p.validated).length;
+            document.getElementById('proofs-count-badge').innerText = proofsCount;
+
             (window.siteData.quests || []).forEach(q => {
                 const card = document.createElement('div');
                 card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between";
@@ -834,9 +1040,17 @@
                             <span class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold">${q.status}</span>
                         </div>
                         <p class="text-xs text-slate-300 mb-3">${q.desc}</p>
-                        <p class="text-xs font-semibold text-emerald-400">🎁 Récompense : ${q.reward}</p>
+                        <div class="flex flex-wrap gap-2 text-xs mb-4">
+                            <span class="bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 text-slate-300">🎁 ${q.reward}</span>
+                            <span class="bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 text-amber-400 font-bold">⭐ ${q.points || 0} Points</span>
+                        </div>
                     </div>
-                    ${isOfficer ? `<button onclick="deleteQuest(${q.id})" class="text-red-400 text-xs mt-4 text-left hover:underline">Supprimer</button>` : ''}
+                    <div class="space-y-2">
+                        <button onclick="openProofModal(${q.id}, '${q.title.replace(/'/g, "\\'")}')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition">
+                            📸 Terminer (Envoyer Preuve)
+                        </button>
+                        ${isOfficer ? `<button onclick="deleteQuest(${q.id})" class="text-red-400 text-xs text-left hover:underline">Supprimer la quête</button>` : ''}
+                    </div>
                 `;
                 grid.appendChild(card);
             });
@@ -845,18 +1059,30 @@
         function addQuest() {
             const title = document.getElementById('new-quest-title').value.trim();
             const reward = document.getElementById('new-quest-reward').value.trim();
-            const status = document.getElementById('new-quest-status').value;
+            const pointsInput = document.getElementById('new-quest-points').value.trim();
             const desc = document.getElementById('new-quest-desc').value.trim();
+            
             if (!title) return alert("Le titre de la quête est requis !");
 
+            // Extraction intelligente si l'officier tape /points 100 ou juste 100
+            let pointsVal = parseInt(pointsInput.replace(/[^0-9]/g, '')) || 0;
+
             if (!window.siteData.quests) window.siteData.quests = [];
-            window.siteData.quests.push({ id: Date.now(), title, reward, status, desc });
+            window.siteData.quests.push({ 
+                id: Date.now(), 
+                title, 
+                reward, 
+                points: pointsVal, 
+                status: "En cours", 
+                desc 
+            });
             
             document.getElementById('new-quest-title').value = '';
             document.getElementById('new-quest-reward').value = '';
+            document.getElementById('new-quest-points').value = '';
             document.getElementById('new-quest-desc').value = '';
             
-            logAction('quete', `Ajout d'une quête : ${title} (${status})`);
+            logAction('quete', `Création de la quête : ${title} (${pointsVal} points)`);
             window.saveDataToFirebase();
         }
 
@@ -867,7 +1093,119 @@
             window.saveDataToFirebase();
         }
 
-        /* RENDU PANTHÉON */
+        /* MODALE PREUVE */
+        function openProofModal(questId, questTitle) {
+            document.getElementById('proof-quest-id').value = questId;
+            document.getElementById('proof-modal-quest-title').innerText = `Quête : ${questTitle}`;
+            document.getElementById('proof-user').value = '';
+            document.getElementById('proof-img-url').value = '';
+            document.getElementById('proof-modal').classList.remove('hidden');
+        }
+
+        function closeProofModal() {
+            document.getElementById('proof-modal').classList.add('hidden');
+        }
+
+        function submitProof() {
+            const questId = parseInt(document.getElementById('proof-quest-id').value);
+            const user = document.getElementById('proof-user').value.trim();
+            const imgUrl = document.getElementById('proof-img-url').value.trim();
+
+            if (!user || !imgUrl) return alert("Veuillez entrer votre pseudo et l'URL de la photo de preuve !");
+
+            const quest = (window.siteData.quests || []).find(q => q.id === questId);
+            if (!quest) return alert("Quête introuvable !");
+
+            if (!window.siteData.proofs) window.siteData.proofs = [];
+            window.siteData.proofs.push({
+                id: Date.now(),
+                questId: quest.id,
+                questTitle: quest.title,
+                questPoints: quest.points || 0,
+                user: user,
+                imgUrl: imgUrl,
+                validated: false,
+                date: new Date().toLocaleString('fr-FR')
+            });
+
+            closeProofModal();
+            alert("Preuve envoyée avec succès au panel des officiers !");
+            logAction('quete', `${user} a soumis une preuve pour la quête "${quest.title}"`);
+            window.saveDataToFirebase();
+        }
+
+        /* PANEL OFFICIERS : VOIR ET VALIDER LES PREUVES */
+        function openProofsPanel() {
+            renderProofsList();
+            document.getElementById('proofs-panel-modal').classList.remove('hidden');
+        }
+
+        function closeProofsPanel() {
+            document.getElementById('proofs-panel-modal').classList.add('hidden');
+        }
+
+        function renderProofsList() {
+            const container = document.getElementById('proofs-list-container');
+            container.innerHTML = '';
+            const proofs = window.siteData.proofs || [];
+
+            if (proofs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">Aucune preuve soumise pour le moment.</p>`;
+                return;
+            }
+
+            proofs.forEach(p => {
+                const item = document.createElement('div');
+                item.className = `bg-slate-950 border p-4 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${p.validated ? 'border-emerald-500/30 opacity-75' : 'border-amber-500/40'}`;
+                item.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <img src="${p.imgUrl}" class="w-16 h-16 rounded-xl bg-slate-900 border border-slate-700 object-cover shrink-0" onerror="this.src='https://via.placeholder.com/150?text=Image+Invalide'">
+                        <div>
+                            <span class="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold">${p.questTitle}</span>
+                            <h4 class="text-sm font-bold text-white mt-1">Joueur : <span class="text-emerald-400">${p.user}</span></h4>
+                            <p class="text-[10px] text-slate-400">Récompense prévue : <span class="text-amber-400 font-bold">${p.questPoints} Points</span> • Soumis le ${p.date}</p>
+                        </div>
+                    </div>
+                    <div>
+                        ${p.validated ? 
+                            `<span class="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20">✅ Validé & Points Attribués</span>` :
+                            `<button onclick="validateProof(${p.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Valider & Donner ${p.questPoints} pts</button>`
+                        }
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function validateProof(proofId) {
+            let proof = (window.siteData.proofs || []).find(p => p.id === proofId);
+            if (!proof || proof.validated) return;
+
+            proof.validated = true;
+
+            // Attribution automatique des points au joueur
+            let player = (window.siteData.players || []).find(pl => pl.name.toLowerCase() === proof.user.toLowerCase());
+            if (player) {
+                player.points = (player.points || 0) + proof.questPoints;
+            } else {
+                window.siteData.players.push({
+                    id: Date.now(),
+                    name: proof.user,
+                    role: "Citoyen",
+                    date: new Date().toLocaleDateString('fr-FR'),
+                    status: "actif",
+                    points: proof.questPoints,
+                    warnings: 0,
+                    img: ""
+                });
+            }
+
+            logAction('points', `Validation de la quête "${proof.questTitle}" pour ${proof.user} (+${proof.questPoints} points attribués)`);
+            window.saveDataToFirebase();
+            renderProofsList();
+        }
+
+        /* PANTHÉON */
         function renderPantheon() {
             const a = window.siteData.amineData || {};
             document.getElementById('pantheon-amine-name').innerText = a.name || 'amine';
@@ -887,7 +1225,7 @@
             window.saveDataToFirebase();
         }
 
-        /* RENDU JOUEURS */
+        /* JOUEURS */
         function renderCards() {
             const grid = document.getElementById('players-grid');
             const select = document.getElementById('edit-player-select');
@@ -913,7 +1251,7 @@
                             </span>
                         </div>
                         <p class="text-xs text-amber-400 font-semibold truncate mt-0.5">${p.role}</p>
-                        <p class="text-[10px] text-slate-500 mt-1">Arrivé le ${p.date}</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Points : <span class="text-white font-bold">${p.points || 0}</span></p>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -955,7 +1293,7 @@
             }
         }
 
-        /* RENDU PROJETS */
+        /* PROJETS (ACCESSIBLE SEULEMENT AUX MEMBRES) */
         function renderProjects() {
             const grid = document.getElementById('projects-grid');
             grid.innerHTML = '';
@@ -1003,6 +1341,7 @@
         window.renderAllSections = function() {
             renderHome();
             renderBank();
+            renderPoints();
             renderPantheon();
             renderCards();
             renderProjects();
