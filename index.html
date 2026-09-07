@@ -29,6 +29,8 @@
                 <button onclick="switchTab('joueurs')" id="tab-btn-joueurs" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Joueurs</button>
                 <!-- BANQUE (MASQUÉE PAR DÉFAUT / VISIBLE SEULEMENT SI CONNECTÉ) -->
                 <button onclick="switchTab('banque')" id="tab-btn-banque" class="hidden px-4 py-2 rounded-xl bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold text-sm hover:text-white transition">🏦 Banque</button>
+                <!-- LOGS & ANALYSES (MASQUÉ, APPARAÎT À GAUCHE UNIQUEMENT POUR L'ADMIN) -->
+                <button onclick="switchTab('logs')" id="tab-btn-logs" class="hidden px-4 py-2 rounded-xl bg-slate-800 text-purple-400 border border-purple-500/30 font-bold text-sm hover:text-white transition">📊 Logs & Analyses</button>
             </nav>
         </div>
     </header>
@@ -241,6 +243,20 @@
             </div>
         </section>
 
+        <!-- SECTION LOGS & ANALYSES (RÉSERVÉE À L'ADMIN) -->
+        <section id="section-logs" class="hidden">
+            <div class="mb-6 flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-black text-white">📊 Logs & Analyses du Royaume</h1>
+                    <p class="text-slate-400 text-sm">Suivi complet des activités, modifications et connexions (Espace Administrateur).</p>
+                </div>
+                <button onclick="clearLogs()" class="bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 px-4 py-2 rounded-xl text-xs font-bold transition">Vider les logs</button>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+                <div id="logs-container" class="space-y-2 max-h-[600px] overflow-y-auto pr-2"></div>
+            </div>
+        </section>
+
     </main>
 
     <!-- FENÊTRE MODALE DE CONNEXION -->
@@ -281,7 +297,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const dataDocRef = doc(db, "royaume", "siteData");
+        const dataDocRef = doc(db, "royaume", "siteDataV2");
 
         window.siteData = {
             homeData: { title: "Le Royaume Illumis", desc: "Bienvenue sur le portail officiel du Royaume Illumis sur PlasmaCube.", discord: "https://discord.gg/exemple", gallery: ["", "", ""] },
@@ -300,7 +316,8 @@
             })),
             projects: [{ id: 1, title: "Château Royal", desc: "Agrandissement des murailles.", status: "En construction" }],
             officers: [{ id: 1, user: "officier", pass: "123" }],
-            members: [{ id: 1, user: "membre", pass: "123" }]
+            members: [{ id: 1, user: "membre", pass: "123" }],
+            logs: []
         };
 
         window.saveDataToFirebase = async function() {
@@ -316,6 +333,7 @@
                 window.siteData = docSnap.data();
                 if (!window.siteData.officers) window.siteData.officers = [{ id: 1, user: "officier", pass: "123" }];
                 if (!window.siteData.members) window.siteData.members = [{ id: 1, user: "membre", pass: "123" }];
+                if (!window.siteData.logs) window.siteData.logs = [];
                 window.renderAllSections();
             } else {
                 window.saveDataToFirebase();
@@ -329,17 +347,47 @@
         let isAdmin = false;
         let loginTargetRole = 'member';
 
+        function logAction(type, text) {
+            if (!window.siteData.logs) window.siteData.logs = [];
+            window.siteData.logs.unshift({
+                id: Date.now(),
+                type: type, // 'annonce', 'projet', 'joueur', 'connexion_membre', 'connexion_officier', 'autre'
+                text: text,
+                date: new Date().toLocaleString('fr-FR')
+            });
+            // Garder max 100 logs pour éviter d'alourdir
+            if (window.siteData.logs.length > 100) window.siteData.logs.pop();
+            window.saveDataToFirebase();
+        }
+
         function switchTab(tab) {
-            ['accueil', 'projets', 'pantheon', 'joueurs', 'banque'].forEach(t => {
+            ['accueil', 'projets', 'pantheon', 'joueurs', 'banque', 'logs'].forEach(t => {
                 const sec = document.getElementById(`section-${t}`);
                 const btn = document.getElementById(`tab-btn-${t}`);
                 if (sec) sec.classList.add('hidden');
-                if (btn) btn.className = "px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition";
+                if (btn && t !== 'logs' && t !== 'banque') {
+                    btn.className = "px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition";
+                } else if (btn && t === 'banque') {
+                    btn.className = "hidden px-4 py-2 rounded-xl bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold text-sm hover:text-white transition";
+                    if (isMember || isOfficer || isAdmin) btn.classList.remove('hidden');
+                } else if (btn && t === 'logs') {
+                    btn.className = "hidden px-4 py-2 rounded-xl bg-slate-800 text-purple-400 border border-purple-500/30 font-bold text-sm hover:text-white transition";
+                    if (isAdmin) btn.classList.remove('hidden');
+                }
             });
             const activeSec = document.getElementById(`section-${tab}`);
             const activeBtn = document.getElementById(`tab-btn-${tab}`);
             if (activeSec) activeSec.classList.remove('hidden');
-            if (activeBtn) activeBtn.className = "px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition";
+            if (activeBtn) {
+                if (tab === 'logs') {
+                    activeBtn.className = "px-4 py-2 rounded-xl bg-purple-600 text-white font-bold text-sm transition";
+                } else if (tab === 'banque') {
+                    activeBtn.className = "px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm transition";
+                } else {
+                    activeBtn.className = "px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition";
+                }
+            }
+            if (tab === 'logs') renderLogs();
         }
 
         /* MODALE & CONNEXION */
@@ -367,6 +415,7 @@
                     isAdmin = true;
                     isOfficer = true;
                     isMember = true;
+                    logAction('connexion_officier', "Connexion Administrateur réussie");
                     alert("Connexion Admin réussie !");
                     closeLoginModal();
                     updateInterfacePermissions();
@@ -380,6 +429,7 @@
                     isOfficer = true;
                     isMember = true;
                     isAdmin = false;
+                    logAction('connexion_officier', `Connexion de l'officier : ${found.user}`);
                     alert(`Bienvenue Officier ${found.user} !`);
                     closeLoginModal();
                     updateInterfacePermissions();
@@ -393,6 +443,7 @@
                     isMember = true;
                     isOfficer = false;
                     isAdmin = false;
+                    logAction('connexion_membre', `Connexion du membre : ${found.user}`);
                     alert(`Bienvenue Membre ${found.user} !`);
                     closeLoginModal();
                     updateInterfacePermissions();
@@ -405,10 +456,11 @@
         function updateInterfacePermissions() {
             const banner = document.getElementById('role-banner');
             const bankBtn = document.getElementById('tab-btn-banque');
+            const logsBtn = document.getElementById('tab-btn-logs');
 
             if (isMember || isOfficer || isAdmin) {
                 banner.classList.remove('hidden');
-                bankBtn.classList.remove('hidden'); // Affiche l'accès Banque
+                bankBtn.classList.remove('hidden');
             } else {
                 banner.classList.add('hidden');
                 bankBtn.classList.add('hidden');
@@ -417,10 +469,15 @@
             if (isAdmin) {
                 document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>👑 Admin Connecté (Accès Total)`;
                 document.getElementById('admin-panel').classList.remove('hidden');
-            } else if (isOfficer) {
+                logsBtn.classList.remove('hidden'); // Affiche le bouton Logs à gauche
+            } else {
+                logsBtn.classList.add('hidden');
+            }
+
+            if (isOfficer) {
                 document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>🔒 Officier Connecté`;
-                document.getElementById('admin-panel').classList.add('hidden');
-            } else if (isMember) {
+                if (!isAdmin) document.getElementById('admin-panel').classList.add('hidden');
+            } else if (isMember && !isOfficer && !isAdmin) {
                 document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>🔑 Membre Connecté (Banque Déverrouillée)`;
                 document.getElementById('admin-panel').classList.add('hidden');
             }
@@ -495,11 +552,13 @@
             window.siteData.members.push({ id: Date.now(), user, pass });
             document.getElementById('new-member-user').value = '';
             document.getElementById('new-member-pass').value = '';
+            logAction('autre', `Création d'un compte membre : ${user}`);
             window.saveDataToFirebase();
         }
 
         function deleteMemberAccount(id) {
             window.siteData.members = window.siteData.members.filter(m => m.id !== id);
+            logAction('autre', `Suppression d'un compte membre ID: ${id}`);
             window.saveDataToFirebase();
         }
 
@@ -512,12 +571,56 @@
             window.siteData.officers.push({ id: Date.now(), user, pass });
             document.getElementById('new-officer-user').value = '';
             document.getElementById('new-officer-pass').value = '';
+            logAction('autre', `Création d'un compte officier : ${user}`);
             window.saveDataToFirebase();
         }
 
         function deleteOfficerAccount(id) {
             window.siteData.officers = window.siteData.officers.filter(o => o.id !== id);
+            logAction('autre', `Suppression d'un compte officier ID: ${id}`);
             window.saveDataToFirebase();
+        }
+
+        /* RENDU LOGS & ANALYSES */
+        function renderLogs() {
+            const container = document.getElementById('logs-container');
+            container.innerHTML = '';
+            const logs = window.siteData.logs || [];
+
+            if (logs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">Aucun log enregistré pour le moment.</p>`;
+                return;
+            }
+
+            logs.forEach(l => {
+                let badgeColor = "bg-slate-800 text-slate-300 border-slate-700";
+                let label = "ACTIVITÉ";
+
+                if (l.type === 'annonce') { badgeColor = "bg-amber-500/20 text-amber-400 border-amber-500/30"; label = "ANNONCE / ACCUEIL"; }
+                else if (l.type === 'projet') { badgeColor = "bg-blue-500/20 text-blue-400 border-blue-500/30"; label = "PROJET"; }
+                else if (l.type === 'joueur') { badgeColor = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"; label = "JOUEUR"; }
+                else if (l.type === 'connexion_membre') { badgeColor = "bg-teal-500/20 text-teal-400 border-teal-500/30"; label = "CO MEMBRE"; }
+                else if (l.type === 'connexion_officier') { badgeColor = "bg-purple-500/20 text-purple-400 border-purple-500/30"; label = "CO OFFICIER/ADMIN"; }
+
+                const row = document.createElement('div');
+                row.className = "flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-950 p-3 rounded-xl border border-slate-800 gap-2";
+                row.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase border ${badgeColor}">${label}</span>
+                        <p class="text-xs text-slate-200">${l.text}</p>
+                    </div>
+                    <span class="text-[10px] text-slate-500 font-mono">${l.date}</span>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function clearLogs() {
+            if (confirm("Voulez-vous vraiment effacer tous les logs ?")) {
+                window.siteData.logs = [];
+                window.saveDataToFirebase();
+                renderLogs();
+            }
         }
 
         /* RENDU ACCUEIL */
@@ -557,11 +660,13 @@
 
         function updateHome(field, val) {
             window.siteData.homeData[field] = val;
+            logAction('annonce', `Modification de l'accueil / VIP (${field})`);
             window.saveDataToFirebase();
         }
 
         function updateVip(field, val) {
             window.siteData.vipData[field] = val;
+            logAction('annonce', `Mise à jour du VIP (${field})`);
             window.saveDataToFirebase();
         }
 
@@ -630,11 +735,13 @@
             });
             document.getElementById('trans-actor').value = '';
             document.getElementById('trans-amount').value = '';
+            logAction('autre', `Transaction bancaire (${type}) de ${amount}k par ${actor}`);
             window.saveDataToFirebase();
         }
 
         function deleteTransaction(id) {
             window.siteData.bankTransactions = window.siteData.bankTransactions.filter(t => t.id !== id);
+            logAction('autre', `Suppression transaction bancaire ID: ${id}`);
             window.saveDataToFirebase();
         }
 
@@ -654,6 +761,7 @@
 
         function updateAmine(field, val) {
             window.siteData.amineData[field] = val;
+            logAction('annonce', `Modification du Panthéon (${field})`);
             window.saveDataToFirebase();
         }
 
@@ -715,10 +823,12 @@
             const id = parseInt(document.getElementById('edit-player-select').value);
             const player = (window.siteData.players || []).find(p => p.id === id);
             if (player) {
+                const oldName = player.name;
                 player.name = document.getElementById('edit-player-name').value;
                 player.role = document.getElementById('edit-player-role').value;
                 player.date = document.getElementById('edit-player-date').value;
                 player.status = document.getElementById('edit-player-status').value;
+                logAction('joueur', `Modification du joueur : ${oldName} -> ${player.name} (${player.role})`);
                 window.saveDataToFirebase();
             }
         }
@@ -754,11 +864,14 @@
             document.getElementById('new-proj-title').value = '';
             document.getElementById('new-proj-status').value = '';
             document.getElementById('new-proj-desc').value = '';
+            logAction('projet', `Ajout d'un nouveau projet : ${title} (${status})`);
             window.saveDataToFirebase();
         }
 
         function deleteProject(id) {
-            window.siteData.projects = window.siteData.projects.filter(p => p.id !== id);
+            const p = (window.siteData.projects || []).find(item => item.id === id);
+            window.siteData.projects = window.siteData.projects.filter(proj => proj.id !== id);
+            logAction('projet', `Suppression du projet : ${p ? p.title : id}`);
             window.saveDataToFirebase();
         }
 
@@ -768,6 +881,10 @@
             renderPantheon();
             renderCards();
             renderProjects();
+        }
+    </script>
+</body>
+</html>
         }
     </script>
 </body>
