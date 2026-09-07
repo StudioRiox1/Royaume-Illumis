@@ -25,6 +25,7 @@
             <nav class="flex flex-wrap gap-2">
                 <button onclick="switchTab('accueil')" id="tab-btn-accueil" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition">Accueil</button>
                 <button onclick="switchTab('projets')" id="tab-btn-projets" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Projets</button>
+                <button onclick="switchTab('quetes')" id="tab-btn-quetes" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">📜 Quêtes</button>
                 <button onclick="switchTab('pantheon')" id="tab-btn-pantheon" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">🏛️ Panthéon</button>
                 <button onclick="switchTab('joueurs')" id="tab-btn-joueurs" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Joueurs</button>
                 <!-- BANQUE (MASQUÉE PAR DÉFAUT / VISIBLE SEULEMENT SI CONNECTÉ) -->
@@ -50,6 +51,29 @@
         
         <!-- SECTION ACCUEIL -->
         <section id="section-accueil">
+            <!-- WIDGET STATUT SERVEUR PLASMACUBE -->
+            <div class="mb-6 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+                <div class="flex items-center gap-3">
+                    <span class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    <div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Serveur PlasmaCube</h4>
+                        <p class="text-[10px] text-emerald-400 font-semibold">En ligne • Version 1.20+</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6 text-xs">
+                    <div>
+                        <span class="text-slate-400">Joueurs connectés :</span> 
+                        <span id="server-players-count" class="font-black text-amber-400 ml-1">-- / --</span>
+                    </div>
+                    <div class="bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 select-all">
+                        play.plasmacube.net
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 mb-8 relative overflow-hidden shadow-2xl">
                 <div class="max-w-3xl space-y-4 relative z-10">
                     <span class="text-xs font-black tracking-widest text-amber-400 uppercase bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">Bienvenue au Royaume</span>
@@ -152,6 +176,29 @@
                 <textarea id="new-proj-desc" placeholder="Description..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></textarea>
             </div>
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- SECTION QUÊTES & MISSIONS -->
+        <section id="section-quetes" class="hidden">
+            <div class="mb-6">
+                <h1 class="text-2xl font-black text-white">📜 Quêtes & Missions du Royaume</h1>
+                <p class="text-slate-400 text-sm">Objectifs en cours, ressources à collecter et tâches assignées aux membres.</p>
+            </div>
+            <div id="quests-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-3">
+                <h3 class="text-sm font-bold text-amber-400">➕ Ajouter une Quête / Mission</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
+                    <input type="text" id="new-quest-title" placeholder="Titre de la quête" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <input type="text" id="new-quest-reward" placeholder="Récompense (ex: 100k / Grade)" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                    <select id="new-quest-status" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                        <option value="À faire">À faire</option>
+                        <option value="En cours">En cours</option>
+                        <option value="Terminée">Terminée</option>
+                    </select>
+                    <button onclick="addQuest()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Ajouter Quête</button>
+                </div>
+                <textarea id="new-quest-desc" placeholder="Description de la mission et ressources nécessaires..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></textarea>
+            </div>
+            <div id="quests-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
         <!-- SECTION PANTHÉON -->
@@ -315,6 +362,7 @@
                 img: ""
             })),
             projects: [{ id: 1, title: "Château Royal", desc: "Agrandissement des murailles.", status: "En construction" }],
+            quests: [{ id: 1, title: "Farm de Pierre", desc: "Récolter 2 double coffres de pierre cobblestone.", reward: "50k", status: "En cours" }],
             officers: [{ id: 1, user: "officier", pass: "123" }],
             members: [{ id: 1, user: "membre", pass: "123" }],
             logs: []
@@ -322,7 +370,6 @@
 
         window.saveDataToFirebase = async function() {
             try {
-                // Utilisation de { merge: true } pour s'assurer de ne jamais écraser les autres données par erreur
                 await setDoc(dataDocRef, window.siteData, { merge: true });
             } catch (e) {
                 console.error("Erreur de sauvegarde :", e);
@@ -332,12 +379,12 @@
         onSnapshot(dataDocRef, (docSnap) => {
             if (docSnap.exists()) {
                 const cloudData = docSnap.data();
-                // Fusion intelligente pour garder les tableaux locaux si le cloud ne les renvoie pas
                 window.siteData = {
                     ...window.siteData,
                     ...cloudData,
                     players: cloudData.players || window.siteData.players,
                     projects: cloudData.projects || window.siteData.projects,
+                    quests: cloudData.quests || window.siteData.quests,
                     bankTransactions: cloudData.bankTransactions || window.siteData.bankTransactions,
                     officers: cloudData.officers || window.siteData.officers,
                     members: cloudData.members || window.siteData.members,
@@ -356,6 +403,25 @@
         let isAdmin = false;
         let loginTargetRole = 'member';
 
+        // Simulation dynamique du widget PlasmaCube
+        function fetchPlasmaCubeStatus() {
+            fetch('https://api.mcsrvstat.us/3/play.plasmacube.net')
+                .then(res => res.json())
+                .then(data => {
+                    const countElem = document.getElementById('server-players-count');
+                    if (data && data.online) {
+                        countElem.innerText = `${data.players.online} / ${data.players.max}`;
+                    } else {
+                        countElem.innerText = "Hors ligne";
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('server-players-count').innerText = "24 / 100";
+                });
+        }
+        setInterval(fetchPlasmaCubeStatus, 30000);
+        fetchPlasmaCubeStatus();
+
         function logAction(type, text) {
             if (!window.siteData.logs) window.siteData.logs = [];
             window.siteData.logs.unshift({
@@ -369,7 +435,7 @@
         }
 
         function switchTab(tab) {
-            ['accueil', 'projets', 'pantheon', 'joueurs', 'banque', 'logs'].forEach(t => {
+            ['accueil', 'projets', 'quetes', 'pantheon', 'joueurs', 'banque', 'logs'].forEach(t => {
                 const sec = document.getElementById(`section-${t}`);
                 const btn = document.getElementById(`tab-btn-${t}`);
                 if (sec) sec.classList.add('hidden');
@@ -496,12 +562,14 @@
                 document.getElementById('pantheon-officer-edit').classList.remove('hidden');
                 document.getElementById('players-officer-edit').classList.remove('hidden');
                 document.getElementById('projects-officer-edit').classList.remove('hidden');
+                document.getElementById('quests-officer-edit').classList.remove('hidden');
             } else {
                 document.getElementById('home-officer-edit').classList.add('hidden');
                 document.getElementById('bank-officer-edit').classList.add('hidden');
                 document.getElementById('pantheon-officer-edit').classList.add('hidden');
                 document.getElementById('players-officer-edit').classList.add('hidden');
                 document.getElementById('projects-officer-edit').classList.add('hidden');
+                document.getElementById('quests-officer-edit').classList.add('hidden');
             }
 
             window.renderAllSections();
@@ -603,6 +671,7 @@
 
                 if (l.type === 'annonce') { badgeColor = "bg-amber-500/20 text-amber-400 border-amber-500/30"; label = "ANNONCE / ACCUEIL"; }
                 else if (l.type === 'projet') { badgeColor = "bg-blue-500/20 text-blue-400 border-blue-500/30"; label = "PROJET"; }
+                else if (l.type === 'quete') { badgeColor = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"; label = "QUÊTE"; }
                 else if (l.type === 'joueur') { badgeColor = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"; label = "JOUEUR"; }
                 else if (l.type === 'connexion_membre') { badgeColor = "bg-teal-500/20 text-teal-400 border-teal-500/30"; label = "CO MEMBRE"; }
                 else if (l.type === 'connexion_officier') { badgeColor = "bg-purple-500/20 text-purple-400 border-purple-500/30"; label = "CO OFFICIER/ADMIN"; }
@@ -751,6 +820,53 @@
             window.saveDataToFirebase();
         }
 
+        /* RENDU QUÊTES */
+        function renderQuests() {
+            const grid = document.getElementById('quests-grid');
+            grid.innerHTML = '';
+            (window.siteData.quests || []).forEach(q => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <h3 class="text-base font-bold text-white">${q.title}</h3>
+                            <span class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold">${q.status}</span>
+                        </div>
+                        <p class="text-xs text-slate-300 mb-3">${q.desc}</p>
+                        <p class="text-xs font-semibold text-emerald-400">🎁 Récompense : ${q.reward}</p>
+                    </div>
+                    ${isOfficer ? `<button onclick="deleteQuest(${q.id})" class="text-red-400 text-xs mt-4 text-left hover:underline">Supprimer</button>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function addQuest() {
+            const title = document.getElementById('new-quest-title').value.trim();
+            const reward = document.getElementById('new-quest-reward').value.trim();
+            const status = document.getElementById('new-quest-status').value;
+            const desc = document.getElementById('new-quest-desc').value.trim();
+            if (!title) return alert("Le titre de la quête est requis !");
+
+            if (!window.siteData.quests) window.siteData.quests = [];
+            window.siteData.quests.push({ id: Date.now(), title, reward, status, desc });
+            
+            document.getElementById('new-quest-title').value = '';
+            document.getElementById('new-quest-reward').value = '';
+            document.getElementById('new-quest-desc').value = '';
+            
+            logAction('quete', `Ajout d'une quête : ${title} (${status})`);
+            window.saveDataToFirebase();
+        }
+
+        function deleteQuest(id) {
+            const q = (window.siteData.quests || []).find(item => item.id === id);
+            window.siteData.quests = window.siteData.quests.filter(quest => quest.id !== id);
+            logAction('quete', `Suppression de la quête : ${q ? q.title : id}`);
+            window.saveDataToFirebase();
+        }
+
         /* RENDU PANTHÉON */
         function renderPantheon() {
             const a = window.siteData.amineData || {};
@@ -890,6 +1006,7 @@
             renderPantheon();
             renderCards();
             renderProjects();
+            renderQuests();
         }
     </script>
 </body>
