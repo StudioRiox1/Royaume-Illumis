@@ -322,7 +322,8 @@
 
         window.saveDataToFirebase = async function() {
             try {
-                await setDoc(dataDocRef, window.siteData);
+                // Utilisation de { merge: true } pour s'assurer de ne jamais écraser les autres données par erreur
+                await setDoc(dataDocRef, window.siteData, { merge: true });
             } catch (e) {
                 console.error("Erreur de sauvegarde :", e);
             }
@@ -330,10 +331,18 @@
 
         onSnapshot(dataDocRef, (docSnap) => {
             if (docSnap.exists()) {
-                window.siteData = docSnap.data();
-                if (!window.siteData.officers) window.siteData.officers = [{ id: 1, user: "officier", pass: "123" }];
-                if (!window.siteData.members) window.siteData.members = [{ id: 1, user: "membre", pass: "123" }];
-                if (!window.siteData.logs) window.siteData.logs = [];
+                const cloudData = docSnap.data();
+                // Fusion intelligente pour garder les tableaux locaux si le cloud ne les renvoie pas
+                window.siteData = {
+                    ...window.siteData,
+                    ...cloudData,
+                    players: cloudData.players || window.siteData.players,
+                    projects: cloudData.projects || window.siteData.projects,
+                    bankTransactions: cloudData.bankTransactions || window.siteData.bankTransactions,
+                    officers: cloudData.officers || window.siteData.officers,
+                    members: cloudData.members || window.siteData.members,
+                    logs: cloudData.logs || window.siteData.logs
+                };
                 window.renderAllSections();
             } else {
                 window.saveDataToFirebase();
@@ -351,11 +360,10 @@
             if (!window.siteData.logs) window.siteData.logs = [];
             window.siteData.logs.unshift({
                 id: Date.now(),
-                type: type, // 'annonce', 'projet', 'joueur', 'connexion_membre', 'connexion_officier', 'autre'
+                type: type, 
                 text: text,
                 date: new Date().toLocaleString('fr-FR')
             });
-            // Garder max 100 logs pour éviter d'alourdir
             if (window.siteData.logs.length > 100) window.siteData.logs.pop();
             window.saveDataToFirebase();
         }
@@ -469,7 +477,7 @@
             if (isAdmin) {
                 document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>👑 Admin Connecté (Accès Total)`;
                 document.getElementById('admin-panel').classList.remove('hidden');
-                logsBtn.classList.remove('hidden'); // Affiche le bouton Logs à gauche
+                logsBtn.classList.remove('hidden');
             } else {
                 logsBtn.classList.add('hidden');
             }
@@ -482,7 +490,6 @@
                 document.getElementById('admin-panel').classList.add('hidden');
             }
 
-            // Affichage des blocs d'édition Officier/Admin
             if (isOfficer || isAdmin) {
                 document.getElementById('home-officer-edit').classList.remove('hidden');
                 document.getElementById('bank-officer-edit').classList.remove('hidden');
@@ -510,7 +517,6 @@
 
         /* GESTION COMPTES PAR L'ADMIN */
         function renderAdminPanel() {
-            // Liste Membres
             const mList = document.getElementById('members-list');
             mList.innerHTML = '';
             (window.siteData.members || []).forEach(m => {
@@ -526,7 +532,6 @@
                 mList.appendChild(item);
             });
 
-            // Liste Officiers
             const oList = document.getElementById('officers-list');
             oList.innerHTML = '';
             (window.siteData.officers || []).forEach(o => {
@@ -730,6 +735,7 @@
 
             if (!actor || isNaN(amount) || amount <= 0) return alert("Champs invalides");
 
+            if (!window.siteData.bankTransactions) window.siteData.bankTransactions = [];
             window.siteData.bankTransactions.unshift({
                 id: Date.now(), type, actor, amount, date: new Date().toLocaleDateString('fr-FR')
             });
@@ -858,12 +864,15 @@
             const title = document.getElementById('new-proj-title').value.trim();
             const status = document.getElementById('new-proj-status').value.trim();
             const desc = document.getElementById('new-proj-desc').value.trim();
-            if (!title) return;
+            if (!title) return alert("Le titre du projet est requis !");
 
+            if (!window.siteData.projects) window.siteData.projects = [];
             window.siteData.projects.push({ id: Date.now(), title, status, desc });
+            
             document.getElementById('new-proj-title').value = '';
             document.getElementById('new-proj-status').value = '';
             document.getElementById('new-proj-desc').value = '';
+            
             logAction('projet', `Ajout d'un nouveau projet : ${title} (${status})`);
             window.saveDataToFirebase();
         }
@@ -881,10 +890,6 @@
             renderPantheon();
             renderCards();
             renderProjects();
-        }
-    </script>
-</body>
-</html>
         }
     </script>
 </body>
