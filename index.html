@@ -1,1351 +1,526 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royaume Illumis — PlasmaCube</title>
+    <title>État Bourguignon - Portails Souverains</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cinzel & Playfair Display for medieval/noble look -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=MedievalSharp&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        burgundy: {
+                            800: '#581826',
+                            900: '#3D0C15',
+                            950: '#24060C'
+                        },
+                        gold: {
+                            400: '#FACC15',
+                            500: '#EAB308',
+                            600: '#CA8A04',
+                            700: '#A16207'
+                        },
+                        parchment: {
+                            100: '#FDFBF7',
+                            200: '#F5EEDC',
+                            300: '#EAD7B7'
+                        }
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        playfair: ['Playfair Display', 'serif'],
+                        medieval: ['MedievalSharp', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        body {
+            background-color: #1a0509;
+            background-image: radial-gradient(circle at center, #3d0c15 0%, #1a0509 100%);
+            color: #2b2b2b;
+            font-family: 'Playfair Display', serif;
+        }
+        .parchment-bg {
+            background-color: #f4ecdc;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239c661f' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            box-shadow: inset 0 0 50px rgba(100, 50, 20, 0.2), 0 10px 30px rgba(0,0,0,0.5);
+            border: 4px solid #b49143;
+        }
+        .gold-border {
+            border-image: linear-gradient(to bottom, #d4af37, #aa771c, #d4af37) 1;
+        }
+        .medieval-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center">
+<body class="min-h-full flex flex-col selection:bg-gold-500 selection:text-burgundy-950">
 
-    <!-- EN-TÊTE -->
-    <header class="w-full border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <span class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent uppercase">
-                    Royaume Illumis
-                </span>
-                <span class="text-xs bg-slate-800 text-slate-400 px-2.5 py-1 rounded-full font-bold">PlasmaCube</span>
-            </div>
+    <header class="relative bg-burgundy-950 border-b-4 border-gold-600 shadow-2xl py-6 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
             
-            <nav class="flex flex-wrap gap-2">
-                <button onclick="switchTab('accueil')" id="tab-btn-accueil" class="px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition">Accueil</button>
-                <button onclick="switchTab('projets')" id="tab-btn-projets" class="hidden px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Projets</button>
-                <button onclick="switchTab('quetes')" id="tab-btn-quetes" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">📜 Quêtes</button>
-                <button onclick="switchTab('points')" id="tab-btn-points" class="px-4 py-2 rounded-xl bg-slate-800 text-amber-400 border border-amber-500/30 font-bold text-sm hover:text-white transition">⭐ Points</button>
-                <button onclick="switchTab('pantheon')" id="tab-btn-pantheon" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">🏛️ Panthéon</button>
-                <button onclick="switchTab('joueurs')" id="tab-btn-joueurs" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition">Joueurs</button>
-                <!-- BANQUE (ACCESSIBLE SEULEMENT AUX MEMBRES) -->
-                <button onclick="switchTab('banque')" id="tab-btn-banque" class="hidden px-4 py-2 rounded-xl bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold text-sm hover:text-white transition">🏦 Banque</button>
-                <!-- LOGS & ANALYSES (ADMIN UNIQUEMENT) -->
-                <button onclick="switchTab('logs')" id="tab-btn-logs" class="hidden px-4 py-2 rounded-xl bg-slate-800 text-purple-400 border border-purple-500/30 font-bold text-sm hover:text-white transition">📊 Logs & Analyses</button>
-            </nav>
+            <!-- Site Title & Emblem -->
+            <div class="flex items-center space-x-4 text-center md:text-left">
+                <div class="w-16 h-16 rounded-full border-2 border-gold-500 bg-burgundy-900 flex items-center justify-center shadow-lg overflow-hidden">
+                    <img src="image_3f336b.png" alt="Blason Bourguignon" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/581826/FACC15?text=Burgundy'">
+                </div>
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-cinzel font-black text-gold-400 medieval-shadow tracking-wider">État Bourguignon</h1>
+                    <p class="text-sm font-playfair italic text-gold-200 opacity-90">Portails Souverains & Domaines Historiques</p>
+                </div>
+            </div>
+
+            <!-- Admin Access Button -->
+            <div class="flex items-center gap-3">
+                <div id="admin-indicator" class="hidden items-center gap-2 bg-gold-500 text-burgundy-950 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow">
+                    <i class="fa-solid fa-shield-halved"></i> Mode Édition Actif
+                </div>
+                <button onclick="toggleAdminModal()" class="bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-burgundy-950 font-cinzel font-bold px-5 py-2.5 rounded-lg shadow-lg border border-gold-300 transition-all transform hover:scale-105 flex items-center gap-2">
+                    <i class="fa-solid fa-key text-burgundy-900"></i>
+                    <span id="admin-btn-text">Espace Admin</span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- BANNIÈRE DE CONNEXION -->
-    <div id="role-banner" class="hidden w-full bg-slate-900 border-b border-slate-800 py-3 px-6">
-        <div class="max-w-6xl mx-auto flex justify-between items-center text-xs font-bold">
-            <span id="banner-text" class="text-amber-400 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Connecté
-            </span>
-            <button onclick="logoutRole()" class="bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-700 hover:text-white">Déconnexion</button>
+    <nav class="bg-burgundy-900 border-b-2 border-gold-700 shadow-inner py-3 px-4">
+        <div class="max-w-6xl mx-auto flex flex-wrap justify-center gap-2 md:gap-4">
+            <button onclick="switchTab('accueil')" id="tab-btn-accueil" class="tab-btn px-6 py-2.5 rounded-t-lg font-cinzel font-bold text-sm md:text-base transition-all bg-gold-500 text-burgundy-950 shadow-md border-t-2 border-gold-300">
+                <i class="fa-solid fa-crown mr-2"></i>État Bourguignon
+            </button>
+            <button onclick="switchTab('garde')" id="tab-btn-garde" class="tab-btn px-6 py-2.5 rounded-t-lg font-cinzel font-bold text-sm md:text-base transition-all bg-burgundy-950 text-gold-400 hover:bg-burgundy-800 border-t-2 border-transparent">
+                <i class="fa-solid fa-shield-sword mr-2"></i>Garde Ducale
+            </button>
+            <button onclick="switchTab('orange')" id="tab-btn-orange" class="tab-btn px-6 py-2.5 rounded-t-lg font-cinzel font-bold text-sm md:text-base transition-all bg-burgundy-950 text-gold-400 hover:bg-burgundy-800 border-t-2 border-transparent">
+                <i class="fa-solid fa-sun mr-2"></i>Principauté d'Orange
+            </button>
+            <button onclick="switchTab('brabant')" id="tab-btn-brabant" class="tab-btn px-6 py-2.5 rounded-t-lg font-cinzel font-bold text-sm md:text-base transition-all bg-burgundy-950 text-gold-400 hover:bg-burgundy-800 border-t-2 border-transparent">
+                <i class="fa-solid fa-chess-rook mr-2"></i>Duché de Brabant
+            </button>
         </div>
-    </div>
+    </nav>
 
-    <main class="max-w-6xl w-full px-6 py-8 flex-1">
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 md:p-8 my-6">
         
-        <!-- SECTION ACCUEIL -->
-        <section id="section-accueil">
-            <!-- WIDGET STATUT SERVEUR PLASMACUBE -->
-            <div class="mb-6 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-lg">
-                <div class="flex items-center gap-3">
-                    <span class="relative flex h-3 w-3">
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                    </span>
-                    <div>
-                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Serveur PlasmaCube</h4>
-                        <p class="text-[10px] text-emerald-400 font-semibold">En ligne • Version 1.20+</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-6 text-xs">
-                    <div>
-                        <span class="text-slate-400">Joueurs connectés :</span> 
-                        <span id="server-players-count" class="font-black text-amber-400 ml-1">-- / --</span>
-                    </div>
-                    <div class="bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 select-all">
-                        play.plasmacube.net
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 mb-8 relative overflow-hidden shadow-2xl">
-                <div class="max-w-3xl space-y-4 relative z-10">
-                    <span class="text-xs font-black tracking-widest text-amber-400 uppercase bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full">Bienvenue au Royaume</span>
-                    <h1 id="home-title" class="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">Le Royaume Illumis</h1>
-                    <p id="home-desc" class="text-slate-300 text-sm md:text-base leading-relaxed"></p>
-                    <div class="pt-4 flex flex-wrap items-center gap-4">
-                        <a id="discord-link" href="#" target="_blank" class="inline-flex items-center gap-3 bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold px-6 py-3.5 rounded-2xl shadow-lg transition">Rejoindre notre Discord</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIP DU MOIS -->
-            <div class="mb-8 bg-gradient-to-r from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/30 rounded-3xl p-6 relative">
-                <div class="flex flex-col md:flex-row items-center gap-6">
-                    <div id="vip-img-box" class="w-24 h-24 rounded-2xl bg-slate-800 border-2 border-amber-500/50 flex items-center justify-center overflow-hidden shrink-0"></div>
-                    <div class="flex-1 text-center md:text-left">
-                        <span class="text-[10px] font-black tracking-wider text-amber-400 uppercase bg-amber-500/20 px-2.5 py-1 rounded-full">⭐ VIP DU MOIS</span>
-                        <h3 id="vip-name" class="text-xl font-bold text-white mt-2">Joueur Nom</h3>
-                        <p id="vip-title" class="text-xs font-semibold text-amber-400 mb-1">Meilleur Bâtisseur</p>
-                        <p id="vip-desc" class="text-xs text-slate-300 italic">"Description..."</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- GALERIE PHOTOS -->
-            <div class="mb-8">
-                <h2 class="text-xl font-bold text-white mb-4">Galerie du Royaume</h2>
-                <div id="home-gallery" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-            </div>
-
-            <!-- ÉDITION ACCUEIL (OFFICIER/ADMIN) -->
-            <div id="home-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-6 rounded-2xl space-y-4 mb-8">
-                <h3 class="text-sm font-bold text-amber-400">✏️ Édition Accueil & VIP</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="edit-home-title" onchange="updateHome('title', this.value)" placeholder="Titre" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
-                    <input type="text" id="edit-home-discord" onchange="updateHome('discord', this.value)" placeholder="Lien Discord" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white">
-                </div>
-                <textarea id="edit-home-desc" rows="2" onchange="updateHome('desc', this.value)" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white"></textarea>
-                <div class="border-t border-slate-800 pt-3">
-                    <h4 class="text-xs font-bold text-amber-400 mb-2">Configuration VIP</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                        <input type="text" id="edit-vip-name" onchange="updateVip('name', this.value)" placeholder="Pseudo" class="bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
-                        <input type="text" id="edit-vip-title" onchange="updateVip('title', this.value)" placeholder="Titre" class="bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
-                        <input type="text" id="edit-vip-img" onchange="updateVip('img', this.value)" placeholder="URL Image ou Skin" class="bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
-                        <input type="text" id="edit-vip-desc" onchange="updateVip('desc', this.value)" placeholder="Description" class="bg-slate-950 border border-slate-700 rounded-lg p-2 text-white">
-                    </div>
-                </div>
-            </div>
-
-            <!-- PANNEAU ADMIN : GESTION DES COMPTES -->
-            <div id="admin-panel" class="hidden bg-slate-900 border border-purple-500/40 p-6 rounded-2xl space-y-6 mb-8">
-                <h3 class="text-sm font-bold text-purple-400 flex items-center gap-2">👑 Panneau Administration (Comptes)</h3>
-                
-                <div class="space-y-3">
-                    <h4 class="text-xs font-bold text-emerald-400">🟢 Comptes Membres</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                        <input type="text" id="new-member-user" placeholder="Pseudo Membre" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                        <input type="text" id="new-member-pass" placeholder="Mot de passe" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                        <button onclick="addMemberAccount()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase">Créer Membre</button>
-                    </div>
-                    <div id="members-list" class="space-y-2 pt-2"></div>
-                </div>
-
-                <div class="border-t border-slate-800 pt-4 space-y-3">
-                    <h4 class="text-xs font-bold text-amber-400">🟡 Comptes Officiers</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                        <input type="text" id="new-officer-user" placeholder="Pseudo Officier" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                        <input type="text" id="new-officer-pass" placeholder="Mot de passe" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                        <button onclick="addOfficerAccount()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Créer Officier</button>
-                    </div>
-                    <div id="officers-list" class="space-y-2 pt-2"></div>
-                </div>
-            </div>
-
-            <!-- BOUTONS D'ACCÈS -->
-            <div class="border-t border-slate-800 pt-6 flex flex-wrap justify-center gap-4">
-                <button onclick="openLoginModal('member')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 font-bold text-xs transition flex items-center gap-2">
-                    🔑 Espace Membre
-                </button>
-                <button onclick="openLoginModal('officer')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold text-xs transition flex items-center gap-2">
-                    🔒 Espace Officier
-                </button>
-                <button onclick="openLoginModal('admin')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-purple-400 border border-purple-500/30 font-bold text-xs transition flex items-center gap-2">
-                    👑 Espace Admin
-                </button>
-            </div>
-        </section>
-
-        <!-- SECTION PROJETS (ACCESSIBLE SEULEMENT AUX MEMBRES) -->
-        <section id="section-projets" class="hidden">
-            <div class="mb-6">
-                <h1 class="text-2xl font-black text-white">🏗️ Projets du Royaume</h1>
-                <p class="text-slate-400 text-sm">Chantiers en cours et planifications (Espace Membres & Officiers).</p>
-            </div>
-            <div id="projects-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-3">
-                <h3 class="text-sm font-bold text-amber-400">➕ Ajouter un Projet</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-                    <input type="text" id="new-proj-title" placeholder="Titre du projet" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <input type="text" id="new-proj-status" placeholder="Statut (ex: En cours)" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <button onclick="addProject()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Ajouter Projet</button>
-                </div>
-                <textarea id="new-proj-desc" placeholder="Description..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></textarea>
-            </div>
-            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-        </section>
-
-        <!-- SECTION QUÊTES & MISSIONS -->
-        <section id="section-quetes" class="hidden">
-            <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 class="text-2xl font-black text-white">📜 Quêtes & Missions du Royaume</h1>
-                    <p class="text-slate-400 text-sm">Accomplissez des missions pour gagner des points et aider le royaume.</p>
-                </div>
-                <button onclick="openProofsPanel()" id="proofs-badge-btn" class="hidden bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-                    📥 Voir les preuves envoyées <span id="proofs-count-badge" class="bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
-                </button>
-            </div>
-
-            <!-- FORMULAIRE CRÉATION QUÊTE (OFFICIER) AVEC /POINTS -->
-            <div id="quests-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-3">
-                <h3 class="text-sm font-bold text-amber-400">➕ Créer une Quête & Définir ses Points</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
-                    <input type="text" id="new-quest-title" placeholder="Titre de la quête" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <input type="text" id="new-quest-reward" placeholder="Récompense (ex: 100k / Grade)" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <input type="text" id="new-quest-points" placeholder="Ex: /points 100 (ou juste 100)" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <button onclick="addQuest()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Créer Quête</button>
-                </div>
-                <textarea id="new-quest-desc" placeholder="Description de la mission et ressources nécessaires..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></textarea>
-            </div>
+        <!-- PARCHMENT CONTAINER -->
+        <div class="parchment-bg rounded-xl p-6 md:p-12 relative shadow-2xl border-8 border-amber-900/40">
             
-            <div id="quests-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </section>
+            <!-- Corner Decorations -->
+            <div class="absolute top-2 left-2 text-amber-900/50 text-2xl"><i class="fa-solid fa-feather"></i></div>
+            <div class="absolute top-2 right-2 text-amber-900/50 text-2xl"><i class="fa-solid fa-feather"></i></div>
+            <div class="absolute bottom-2 left-2 text-amber-900/50 text-2xl"><i class="fa-solid fa-feather"></i></div>
+            <div class="absolute bottom-2 right-2 text-amber-900/50 text-2xl"><i class="fa-solid fa-feather"></i></div>
 
-        <!-- SECTION POINTS & AVERTISSEMENTS -->
-        <section id="section-points" class="hidden">
-            <div class="mb-6">
-                <h1 class="text-2xl font-black text-white">⭐ Système de Points & Avertissements</h1>
-                <p class="text-slate-400 text-sm">Suivi des points des membres, barème officiel et gestion des sanctions.</p>
-            </div>
-
-            <!-- BARÈME OFFICIEL -->
-            <div class="mb-8 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <h3 class="text-base font-bold text-amber-400">📊 Barème Officiel des Points</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                        <span class="font-bold text-emerald-400 block mb-1">🏦 Dons en Banque</span>
-                        <p class="text-slate-300">1k mis dans la banque = <strong>10 Points</strong> (attribué automatiquement).</p>
-                    </div>
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                        <span class="font-bold text-amber-400 block mb-1">📜 Quêtes & Missions</span>
-                        <p class="text-slate-300">Points variables définis par les officiers lors de la création de la quête.</p>
-                    </div>
-                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                        <span class="font-bold text-rose-400 block mb-1">⚠️ Zone Rouge & Avertissements</span>
-                        <p class="text-slate-300">Moins de 50 points = <strong>Avertissement</strong> / Joueur dans le rouge.</p>
-                    </div>
+            <!-- TAB 1: ACCUEIL / ÉTAT BOURGUIGNON -->
+            <div id="tab-content-accueil" class="tab-content space-y-6">
+                <div class="text-center border-b-2 border-amber-900/30 pb-6">
+                    <h2 class="text-4xl md:text-5xl font-cinzel font-black text-burgundy-900 mb-3" data-editable="title" data-key="accueil_title">État Bourguignon</h2>
+                    <p class="text-lg font-playfair italic text-amber-900" data-editable="subtitle" data-key="accueil_subtitle">Bienvenue sur le portail souverain des terres et vassaux de Bourgogne.</p>
                 </div>
-            </div>
 
-            <!-- GESTION MANUELLE POINTS (OFFICIER) -->
-            <div id="points-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-3">
-                <h3 class="text-sm font-bold text-amber-400">⚙️ Ajuster les points d'un joueur ou mettre un avertissement</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
-                    <input type="text" id="adj-point-name" placeholder="Pseudo du joueur" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <input type="number" id="adj-point-val" placeholder="Valeur (+ ou - points)" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <input type="text" id="adj-point-reason" placeholder="Raison / Avertissement" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <button onclick="adjustMemberPoints()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Appliquer</button>
-                </div>
-            </div>
-
-            <!-- CLASSEMENT DES POINTS -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                <h3 class="text-base font-bold text-white mb-4">🏆 Tableau des Points & Statuts</h3>
-                <div id="points-ranking-list" class="space-y-2"></div>
-            </div>
-        </section>
-
-        <!-- SECTION PANTHÉON -->
-        <section id="section-pantheon" class="hidden">
-            <div class="mb-6"><h1 class="text-2xl font-black text-white">🏛️ Panthéon du Royaume</h1></div>
-            <div id="pantheon-page-1" class="space-y-4">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-6">
-                    <div id="pantheon-amine-img" class="w-28 h-28 rounded-2xl bg-slate-800 border-2 border-amber-500 flex items-center justify-center shrink-0 overflow-hidden"></div>
-                    <div class="flex-1 text-center md:text-left">
-                        <h2 id="pantheon-amine-name" class="text-xl font-extrabold text-white">amine</h2>
-                        <p id="pantheon-amine-desc" class="text-xs text-slate-300 mt-2"></p>
+                <div class="grid md:grid-cols-3 gap-6 items-center my-6">
+                    <div class="md:col-span-1 flex justify-center">
+                        <div class="w-48 h-48 rounded-lg border-4 border-amber-900 p-2 bg-white/50 shadow-xl flex items-center justify-center overflow-hidden">
+                            <img src="image_3f336b.png" alt="État Bourguignon" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/200x200/581826/FACC15?text=Bourgogne'">
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 space-y-4">
+                        <div class="prose font-playfair text-lg leading-relaxed text-stone-900 space-y-4" data-editable="html" data-key="accueil_text">
+                            <p>Les Terres et États Bourguignons incarnent l'une des plus prestigieuses principautés de l'Europe médiévale. Carrefour des arts, de la diplomatie et de la puissance militaire, le duché rayonne par son faste et la sagesse de ses souverains.</p>
+                            <p>Ce site regroupe les institutions majeures et les fiefs alliés sous la bannière bourguignonne. Naviguez à travers les onglets ci-dessus pour inspecter la Garde Ducale, la Principauté d'Orange et le Duché de Brabant.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="pantheon-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mt-8 space-y-3">
-                <h3 class="text-sm font-bold text-amber-400">✏️ Édition Panthéon</h3>
-                <input type="text" id="edit-amine-name" onchange="updateAmine('name', this.value)" placeholder="Nom" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                <input type="text" id="edit-amine-img" onchange="updateAmine('img', this.value)" placeholder="URL Image" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                <textarea id="edit-amine-desc" rows="2" onchange="updateAmine('desc', this.value)" placeholder="Description" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></textarea>
-            </div>
-        </section>
 
-        <!-- SECTION JOUEURS -->
-        <section id="section-joueurs" class="hidden">
-            <div class="grid grid-cols-3 gap-4 mb-8">
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center"><p class="text-xs font-bold text-slate-400">TOTAL</p><p id="stat-total" class="text-2xl font-black text-white">30</p></div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center"><p class="text-xs font-bold text-slate-400">ACTIFS</p><p id="stat-actifs" class="text-2xl font-black text-emerald-400">0</p></div>
-                <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl text-center"><p class="text-xs font-bold text-slate-400">RETRAITÉS</p><p id="stat-retraites" class="text-2xl font-black text-slate-500">0</p></div>
+                <!-- Dynamic Admin Added Blocks for Accueil -->
+                <div id="dynamic-blocks-accueil" class="space-y-6 mt-6"></div>
             </div>
 
-            <!-- FORMULAIRE ÉDITION JOUEURS (OFFICIER) -->
-            <div id="players-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-4">
-                <h3 class="text-sm font-bold text-amber-400">✏️ Modifier un Joueur</h3>
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-2">
-                    <select id="edit-player-select" onchange="loadPlayerToEdit()" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white"></select>
-                    <input type="text" id="edit-player-name" placeholder="Pseudo" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <input type="text" id="edit-player-role" placeholder="Rôle / Titre" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <input type="text" id="edit-player-date" placeholder="Date d'arrivée" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                    <select id="edit-player-status" class="bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
-                        <option value="actif">Actif</option>
-                        <option value="retraite">Retraité</option>
-                    </select>
+            <!-- TAB 2: GARDE DUCALE -->
+            <div id="tab-content-garde" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-center border-b-2 border-amber-900/30 pb-6 gap-4">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-cinzel font-black text-burgundy-900 mb-2" data-editable="title" data-key="garde_title">La Garde Ducale du Duché de Bourgogne</h2>
+                        <p class="text-amber-900 font-playfair italic" data-editable="subtitle" data-key="garde_subtitle">Élite militaire et protectrice du souverain.</p>
+                    </div>
+                    <!-- Discord Link Button -->
+                    <a href="https://discord.gg/5pdz7rzyDP" target="_blank" class="bg-[#5865F2] hover:bg-[#4752C4] text-white px-5 py-3 rounded-xl font-cinzel font-bold shadow-lg flex items-center gap-3 transition-transform hover:scale-105 shrink-0">
+                        <i class="fa-brands fa-discord text-2xl"></i>
+                        <span>Rejoindre le Discord</span>
+                    </a>
                 </div>
-                <button onclick="savePlayerEdit()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Sauvegarder Joueur</button>
+
+                <div class="grid md:grid-cols-3 gap-6 items-start my-6">
+                    <div class="md:col-span-1 flex flex-col items-center justify-center">
+                        <div class="w-52 h-64 rounded-lg border-4 border-amber-900 p-2 bg-white/50 shadow-xl flex items-center justify-center overflow-hidden">
+                            <img src="image_3f336b.png" alt="Garde Ducale" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/200x250/581826/FACC15?text=Garde+Ducale'">
+                        </div>
+                        <span class="text-xs font-cinzel text-amber-900 mt-2 font-bold uppercase">Blason de la Garde</span>
+                    </div>
+                    <div class="md:col-span-2 space-y-4">
+                        <div class="prose font-playfair text-lg leading-relaxed text-stone-900 space-y-4" data-editable="html" data-key="garde_text">
+                            <p>La Garde ducale constitue l'élite militaire chargée de la protection du duc, de sa famille et des résidences ducales. Elle assure également le maintien de l'ordre dans les terres du duché, escorte les personnalités importantes et participe aux campagnes militaires lorsque le duc prend les armes.</p>
+                            <h3 class="font-cinzel font-bold text-xl text-burgundy-900 mt-4">Missions :</h3>
+                            <ul class="list-disc pl-6 space-y-1">
+                                <li>Protéger le duc et la cour ducale.</li>
+                                <li>Garder les châteaux, palais et bâtiments officiels.</li>
+                                <li>Assurer la sécurité lors des cérémonies et événements.</li>
+                                <li>Escorter les ambassadeurs et les dignitaires.</li>
+                                <li>Intervenir contre les révoltes, les bandits et les menaces pesant sur le duché.</li>
+                                <li>Combattre aux côtés de l'armée ducale en temps de guerre.</li>
+                            </ul>
+                            <div class="p-4 bg-amber-100/60 border-l-4 border-burgundy-900 rounded my-4">
+                                <p class="font-cinzel font-bold text-burgundy-900 italic">Devise :</p>
+                                <p class="text-xl font-cinzel font-black text-burgundy-900 mt-1">« Honneur, Loyauté, Vigilance. »</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Admin Added Blocks for Garde -->
+                <div id="dynamic-blocks-garde" class="space-y-6 mt-6"></div>
             </div>
 
-            <div id="players-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </section>
+            <!-- TAB 3: PRINCIPAUTÉ D'ORANGE -->
+            <div id="tab-content-orange" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-center border-b-2 border-amber-900/30 pb-6 gap-4">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-cinzel font-black text-burgundy-900 mb-2" data-editable="title" data-key="orange_title">La Principauté d'Orange</h2>
+                        <p class="text-amber-900 font-playfair italic" data-editable="subtitle" data-key="orange_subtitle">Fief souverain du Saint-Empire romain germanique.</p>
+                    </div>
+                    <!-- Discord Link Button -->
+                    <a href="https://discord.gg/97tZpjcKdE" target="_blank" class="bg-[#5865F2] hover:bg-[#4752C4] text-white px-5 py-3 rounded-xl font-cinzel font-bold shadow-lg flex items-center gap-3 transition-transform hover:scale-105 shrink-0">
+                        <i class="fa-brands fa-discord text-2xl"></i>
+                        <span>Rejoindre le Discord</span>
+                    </a>
+                </div>
 
-        <!-- SECTION BANQUE (ACCESSIBLE SEULEMENT AUX MEMBRES) -->
-        <section id="section-banque" class="hidden">
-            <div class="mb-6">
-                <h1 class="text-2xl font-black text-white">🏦 Banque du Royaume</h1>
-                <p class="text-slate-400 text-sm">Gestion du trésor officiel. (Chaque don ajoute automatiquement des points au joueur : 1k = 10 pts).</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div class="bg-slate-900 border border-amber-500/40 p-5 rounded-2xl text-center shadow-lg bg-gradient-to-b from-amber-500/10 to-transparent">
-                    <p class="text-xs font-bold text-amber-400 tracking-wider">SOLDE ACTUEL</p>
-                    <p id="bank-balance" class="text-3xl font-black text-white mt-1">0k</p>
+                <div class="grid md:grid-cols-3 gap-6 items-start my-6">
+                    <div class="md:col-span-1 flex flex-col items-center justify-center">
+                        <div class="w-52 h-64 rounded-lg border-4 border-amber-900 p-2 bg-white/50 shadow-xl flex items-center justify-center overflow-hidden">
+                            <img src="image_3f30a1.png" alt="Principauté d'Orange" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/200x250/581826/FACC15?text=Orange'">
+                        </div>
+                        <span class="text-xs font-cinzel text-amber-900 mt-2 font-bold uppercase">Armoiries d'Orange</span>
+                    </div>
+                    <div class="md:col-span-2 space-y-4">
+                        <div class="prose font-playfair text-lg leading-relaxed text-stone-900 space-y-4" data-editable="html" data-key="orange_text">
+                            <p>La principauté d'Orange est un fief du Saint-Empire romain germanique, érigé à la fin du XIIe siècle, en principauté souveraine, jusqu'à sa disparition en 1713.</p>
+                            <p>Son territoire est entièrement enclavé dans le Comtat Venaissin, avec pour capitale la ville d'Orange, situé dans l'actuel département de Vaucluse.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl text-center">
-                    <p class="text-xs font-bold text-emerald-400 tracking-wider">TOTAL DES DONS</p>
-                    <p id="bank-total-donations" class="text-2xl font-black text-white mt-1">0k</p>
-                </div>
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl text-center">
-                    <p class="text-xs font-bold text-rose-400 tracking-wider">TOTAL DES DÉPENSES</p>
-                    <p id="bank-total-expenses" class="text-2xl font-black text-white mt-1">0k</p>
-                </div>
-            </div>
-            <div class="mb-8 bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                <h2 class="text-base font-bold text-white mb-4">🏆 Top Donateurs du Royaume</h2>
-                <div id="top-donators-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-            </div>
-            <div id="bank-officer-edit" class="hidden bg-slate-900 border border-amber-500/30 p-5 rounded-2xl mb-8 space-y-4">
-                <h3 class="text-sm font-bold text-amber-400">➕ Enregistrer une Transaction (Attribution auto des points si don)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                    <select id="trans-type" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white">
-                        <option value="don">🟢 Don (+)</option>
-                        <option value="depense">🔴 Dépense (-)</option>
-                    </select>
-                    <input type="text" id="trans-actor" placeholder="Pseudo / Motif" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-                    <input type="number" id="trans-amount" placeholder="Montant (k)" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
-                    <button onclick="addTransaction()" class="bg-amber-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-wider">Ajouter</button>
-                </div>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                <h2 class="text-base font-bold text-white mb-4">📜 Historique des Opérations</h2>
-                <div id="bank-transactions-list" class="space-y-2"></div>
-            </div>
-        </section>
 
-        <!-- SECTION LOGS & ANALYSES (ADMIN UNIQUEMENT) -->
-        <section id="section-logs" class="hidden">
-            <div class="mb-6 flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-black text-white">📊 Logs & Analyses du Royaume</h1>
-                    <p class="text-slate-400 text-sm">Suivi complet des activités et modifications (Espace Administrateur).</p>
-                </div>
-                <button onclick="clearLogs()" class="bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 px-4 py-2 rounded-xl text-xs font-bold transition">Vider les logs</button>
+                <!-- Dynamic Admin Added Blocks for Orange -->
+                <div id="dynamic-blocks-orange" class="space-y-6 mt-6"></div>
             </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-                <div id="logs-container" class="space-y-2 max-h-[600px] overflow-y-auto pr-2"></div>
-            </div>
-        </section>
 
+            <!-- TAB 4: DUCHÉ DE BRABANT -->
+            <div id="tab-content-brabant" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-center border-b-2 border-amber-900/30 pb-6 gap-4">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-cinzel font-black text-burgundy-900 mb-2" data-editable="title" data-key="brabant_title">Le Duché de Brabant</h2>
+                        <p class="text-amber-900 font-playfair italic" data-editable="subtitle" data-key="brabant_subtitle">État historique majeur des Pays-Bas historiques.</p>
+                    </div>
+                    <!-- Discord Link Button -->
+                    <a href="https://discord.gg/GBbp9gHcP" target="_blank" class="bg-[#5865F2] hover:bg-[#4752C4] text-white px-5 py-3 rounded-xl font-cinzel font-bold shadow-lg flex items-center gap-3 transition-transform hover:scale-105 shrink-0">
+                        <i class="fa-brands fa-discord text-2xl"></i>
+                        <span>Rejoindre le Discord</span>
+                    </a>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 items-start my-6">
+                    <div class="md:col-span-1 flex flex-col items-center justify-center">
+                        <div class="w-52 h-64 rounded-lg border-4 border-amber-900 p-2 bg-white/50 shadow-xl flex items-center justify-center overflow-hidden">
+                            <img src="image_3f305f.png" alt="Duché de Brabant" class="w-full h-full object-contain" onerror="this.src='https://placehold.co/200x250/581826/FACC15?text=Brabant'">
+                        </div>
+                        <span class="text-xs font-cinzel text-amber-900 mt-2 font-bold uppercase">Armoiries de Brabant</span>
+                    </div>
+                    <div class="md:col-span-2 space-y-4">
+                        <div class="prose font-playfair text-lg leading-relaxed text-stone-900 space-y-4" data-editable="html" data-key="brabant_text">
+                            <p>Le duché de Brabant est un ancien État historique de premier plan situé dans les Pays-Bas historiques. Son territoire s'étendait sur une grande partie de la Belgique actuelle (Bruxelles, provinces du Brabant flamand, du Brabant wallon et d'Anvers) et sur le sud des Pays-Bas (province du Brabant-Septentrional).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Admin Added Blocks for Brabant -->
+                <div id="dynamic-blocks-brabant" class="space-y-6 mt-6"></div>
+            </div>
+
+            <!-- ADMIN CONTROLS BAR (Visible only when admin is logged in) -->
+            <div id="admin-controls-bar" class="hidden mt-10 pt-6 border-t-2 border-amber-900/30 flex flex-wrap items-center justify-between gap-4 bg-amber-200/50 p-4 rounded-xl">
+                <div class="flex items-center gap-3">
+                    <span class="font-cinzel font-bold text-burgundy-900"><i class="fa-solid fa-tools mr-2"></i>Outils d'Administration :</span>
+                    <button onclick="addNewBlock()" class="bg-burgundy-900 hover:bg-burgundy-800 text-gold-400 px-4 py-2 rounded-lg font-cinzel font-bold text-sm shadow flex items-center gap-2">
+                        <i class="fa-solid fa-plus-circle"></i> Ajouter un bloc de texte
+                    </button>
+                    <button onclick="addNewImageBlock()" class="bg-burgundy-900 hover:bg-burgundy-800 text-gold-400 px-4 py-2 rounded-lg font-cinzel font-bold text-sm shadow flex items-center gap-2">
+                        <i class="fa-solid fa-image"></i> Ajouter une image
+                    </button>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="saveAllChanges()" class="bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-lg font-cinzel font-bold text-sm shadow flex items-center gap-2">
+                        <i class="fa-solid fa-save"></i> Enregistrer les modifications
+                    </button>
+                    <button onclick="resetDefaults()" class="bg-rose-800 hover:bg-rose-700 text-white px-4 py-2 rounded-lg font-cinzel font-bold text-sm shadow flex items-center gap-2" title="Réinitialiser les données d'usine">
+                        <i class="fa-solid fa-rotate-right"></i> Réinitialiser
+                    </button>
+                    <button onclick="logoutAdmin()" class="bg-stone-700 hover:bg-stone-600 text-white px-4 py-2 rounded-lg font-cinzel font-bold text-sm shadow">
+                        Quitter Admin
+                    </button>
+                </div>
+            </div>
+
+        </div>
     </main>
 
-    <!-- MODALE DE CONNEXION -->
-    <div id="login-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-sm space-y-4 shadow-2xl relative">
-            <h3 id="modal-title" class="text-lg font-black text-white text-center">Connexion</h3>
-            <div class="space-y-3">
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase">Identifiant / Pseudo</label>
-                    <input type="text" id="login-user" placeholder="Votre pseudo" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
+    <footer class="bg-burgundy-950 border-t-4 border-gold-600 text-gold-200 py-6 px-4 mt-auto text-center font-playfair text-sm">
+        <p class="font-cinzel tracking-wider">État Bourguignon &bull; Tous droits réservés &bull; An 2026</p>
+        <p class="text-xs text-gold-400/70 mt-1">Portail historique administré sous l'égide des ducs de Bourgogne.</p>
+    </footer>
+
+    <div id="admin-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="parchment-bg max-w-md w-full p-6 rounded-2xl shadow-2xl border-4 border-gold-600 relative">
+            <button onclick="toggleAdminModal()" class="absolute top-4 right-4 text-burgundy-950 font-bold text-xl hover:text-rose-700">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-burgundy-900 text-gold-400 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg border-2 border-gold-500">
+                    <i class="fa-solid fa-lock text-2xl"></i>
                 </div>
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase">Mot de passe</label>
-                    <input type="password" id="login-pass" placeholder="••••••••" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-500">
-                </div>
+                <h3 class="text-2xl font-cinzel font-black text-burgundy-900">Authentification Sépulcrale</h3>
+                <p class="text-xs font-playfair italic text-amber-900 mt-1">Veuillez entrer le mot de passe ducal pour accéder aux privilèges de modification.</p>
             </div>
-            <div class="flex gap-2 pt-2">
-                <button onclick="closeLoginModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs">Annuler</button>
-                <button onclick="submitLogin()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs uppercase">Se Connecter</button>
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-cinzel font-bold text-xs text-burgundy-900 uppercase mb-1">Mot de passe</label>
+                    <input type="password" id="admin-password-input" placeholder="ex: duché" class="w-full px-4 py-3 rounded-lg border-2 border-amber-900/40 bg-white/80 font-playfair focus:outline-none focus:border-burgundy-900" onkeydown="if(event.key === 'Enter') checkAdminPassword()">
+                </div>
+                <div id="admin-error-msg" class="text-rose-700 text-xs font-bold text-center hidden">Mot de passe incorrect. Indice : le mot de passe est "duché".</div>
+                <button onclick="checkAdminPassword()" class="w-full bg-gradient-to-r from-burgundy-900 to-burgundy-950 text-gold-400 hover:text-gold-300 font-cinzel font-bold py-3 rounded-lg shadow-lg border border-gold-500 transition-all">
+                    S'authentifier
+                </button>
             </div>
         </div>
     </div>
-
-    <!-- MODALE SOUMISSION PREUVE QUÊTE -->
-    <div id="proof-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-md space-y-4 shadow-2xl relative">
-            <h3 class="text-lg font-black text-white text-center">📸 Soumettre une preuve de quête</h3>
-            <p id="proof-modal-quest-title" class="text-xs text-amber-400 font-bold text-center"></p>
-            <input type="hidden" id="proof-quest-id">
-            <div class="space-y-3">
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase">Votre Pseudo</label>
-                    <input type="text" id="proof-user" placeholder="Votre pseudo en jeu" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase">URL de la photo (Preuve)</label>
-                    <input type="text" id="proof-img-url" placeholder="https://imgur.com/... ou lien direct image" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
-                </div>
-            </div>
-            <div class="flex gap-2 pt-2">
-                <button onclick="closeProofModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl text-xs">Annuler</button>
-                <button onclick="submitProof()" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs uppercase">Envoyer la preuve</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODALE PANEL OFFICIERS : VOIR LES PREUVES -->
-    <div id="proofs-panel-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-2xl space-y-4 shadow-2xl relative max-h-[80vh] flex flex-col">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-black text-white">📥 Panel Officiers : Preuves de Quêtes Soumises</h3>
-                <button onclick="closeProofsPanel()" class="text-slate-400 hover:text-white font-bold text-sm">✕</button>
-            </div>
-            <div id="proofs-list-container" class="space-y-3 overflow-y-auto flex-1 pr-1"></div>
-        </div>
-    </div>
-
-    <!-- FIREBASE SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyA6ZTcoI2VnrLQp9YIomhtG-Q6fIMf5IEI",
-            authDomain: "royaume-illumis.firebaseapp.com",
-            projectId: "royaume-illumis",
-            storageBucket: "royaume-illumis.firebasestorage.app",
-            messagingSenderId: "128365932279",
-            appId: "1:128365932279:web:68a387cf43efce4118edf2",
-            measurementId: "G-FHV0VMBSHH"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const dataDocRef = doc(db, "royaume", "siteDataV2");
-
-        window.siteData = {
-            homeData: { title: "Le Royaume Illumis", desc: "Bienvenue sur le portail officiel du Royaume Illumis sur PlasmaCube.", discord: "https://discord.gg/exemple", gallery: ["", "", ""] },
-            vipData: { name: "amine", title: "Bâtisseur du Mois", desc: "A construit la muraille Est.", img: "" },
-            amineData: { name: "amine", desc: "Fondateur et pilier du Royaume Illumis.", img: "" },
-            bankTransactions: [
-                { id: 1, type: "don", actor: "amine", amount: 500, date: "06/09/2026" }
-            ],
-            players: Array.from({ length: 30 }, (_, i) => ({
-                id: i + 1,
-                name: i === 0 ? "amine" : `Joueur_${i + 1}`,
-                role: i === 0 ? "Roi d'Illumis" : "Citoyen",
-                date: "01/01/2026",
-                status: i % 2 === 0 ? "actif" : "retraite",
-                points: i === 0 ? 5000 : 40, // Point de départ bas pour tester la zone rouge (<50)
-                warnings: i === 0 ? 0 : 1,
-                img: ""
-            })),
-            projects: [{ id: 1, title: "Château Royal", desc: "Agrandissement des murailles.", status: "En construction" }],
-            quests: [{ id: 1, title: "Farm de Pierre", desc: "Récolter 2 double coffres de pierre cobblestone.", reward: "50k", points: 100, status: "En cours" }],
-            proofs: [],
-            officers: [{ id: 1, user: "officier", pass: "123" }],
-            members: [{ id: 1, user: "membre", pass: "123" }],
-            logs: []
-        };
-
-        window.saveDataToFirebase = async function() {
-            try {
-                await setDoc(dataDocRef, window.siteData, { merge: true });
-            } catch (e) {
-                console.error("Erreur de sauvegarde :", e);
-            }
-        };
-
-        onSnapshot(dataDocRef, (docSnap) => {
-            if (docSnap.exists()) {
-                const cloudData = docSnap.data();
-                window.siteData = {
-                    ...window.siteData,
-                    ...cloudData,
-                    players: cloudData.players || window.siteData.players,
-                    projects: cloudData.projects || window.siteData.projects,
-                    quests: cloudData.quests || window.siteData.quests,
-                    proofs: cloudData.proofs || window.siteData.proofs,
-                    bankTransactions: cloudData.bankTransactions || window.siteData.bankTransactions,
-                    officers: cloudData.officers || window.siteData.officers,
-                    members: cloudData.members || window.siteData.members,
-                    logs: cloudData.logs || window.siteData.logs
-                };
-                window.renderAllSections();
-            } else {
-                window.saveDataToFirebase();
-            }
-        });
-    </script>
 
     <script>
-        let isMember = false;
-        let isOfficer = false;
+        let currentTab = 'accueil';
         let isAdmin = false;
-        let loginTargetRole = 'member';
 
-        // Widget Statut Serveur PlasmaCube
-        function fetchPlasmaCubeStatus() {
-            fetch('https://api.mcsrvstat.us/3/play.plasmacube.net')
-                .then(res => res.json())
-                .then(data => {
-                    const countElem = document.getElementById('server-players-count');
-                    if (data && data.online) {
-                        countElem.innerText = `${data.players.online} / ${data.players.max}`;
-                    } else {
-                        countElem.innerText = "Hors ligne";
-                    }
-                })
-                .catch(() => {
-                    document.getElementById('server-players-count').innerText = "24 / 100";
-                });
-        }
-        setInterval(fetchPlasmaCubeStatus, 30000);
-        fetchPlasmaCubeStatus();
+        // Default content map
+        const defaultContent = {
+            accueil_title: "État Bourguignon",
+            accueil_subtitle: "Bienvenue sur le portail souverain des terres et vassaux de Bourgogne.",
+            accueil_text: `<p>Les Terres et États Bourguignons incarnent l'une des plus prestigieuses principautés de l'Europe médiévale. Carrefour des arts, de la diplomatie et de la puissance militaire, le duché rayonne par son faste et la sagesse de ses souverains.</p><p>Ce site regroupe les institutions majeures et les fiefs alliés sous la bannière bourguignonne. Naviguez à travers les onglets ci-dessus pour inspecter la Garde Ducale, la Principauté d'Orange et le Duché de Brabant.</p>`,
+            
+            garde_title: "La Garde Ducale du Duché de Bourgogne",
+            garde_subtitle: "Élite militaire et protectrice du souverain.",
+            garde_text: `<p>La Garde ducale constitue l'élite militaire chargée de la protection du duc, de sa famille et des résidences ducales. Elle assure également le maintien de l'ordre dans les terres du duché, escorte les personnalités importantes et participe aux campagnes militaires lorsque le duc prend les armes.</p><h3 class="font-cinzel font-bold text-xl text-burgundy-900 mt-4">Missions :</h3><ul class="list-disc pl-6 space-y-1"><li>Protéger le duc et la cour ducale.</li><li>Garder les châteaux, palais et bâtiments officiels.</li><li>Assurer la sécurité lors des cérémonies et événements.</li><li>Escorter les ambassadeurs et les dignitaires.</li><li>Intervenir contre les révoltes, les bandits et les menaces pesant sur le duché.</li><li>Combattre aux côtés de l'armée ducale en temps de guerre.</li></ul><div class="p-4 bg-amber-100/60 border-l-4 border-burgundy-900 rounded my-4"><p class="font-cinzel font-bold text-burgundy-900 italic">Devise :</p><p class="text-xl font-cinzel font-black text-burgundy-900 mt-1">« Honneur, Loyauté, Vigilance. »</p></div>`,
+            
+            orange_title: "La Principauté d'Orange",
+            orange_subtitle: "Fief souverain du Saint-Empire romain germanique.",
+            orange_text: `<p>La principauté d'Orange est un fief du Saint-Empire romain germanique, érigé à la fin du XIIe siècle, en principauté souveraine, jusqu'à sa disparition en 1713.</p><p>Son territoire est entièrement enclavé dans le Comtat Venaissin, avec pour capitale la ville d'Orange, situé dans l'actuel département de Vaucluse.</p>`,
+            
+            brabant_title: "Le Duché de Brabant",
+            brabant_subtitle: "État historique majeur des Pays-Bas historiques.",
+            brabant_text: `<p>Le duché de Brabant est un ancien État historique de premier plan situé dans les Pays-Bas historiques. Son territoire s'étendait sur une grande partie de la Belgique actuelle (Bruxelles, provinces du Brabant flamand, du Brabant wallon et d'Anvers) et sur le sud des Pays-Bas (province du Brabant-Septentrional).</p>`
+        };
 
-        function logAction(type, text) {
-            if (!window.siteData.logs) window.siteData.logs = [];
-            window.siteData.logs.unshift({
-                id: Date.now(),
-                type: type, 
-                text: text,
-                date: new Date().toLocaleString('fr-FR')
+        // Load saved content & dynamic blocks on startup
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedData();
+            // Check if admin was previously logged in session
+            if (localStorage.getItem('burgundy_admin_auth') === 'true') {
+                enableAdminMode();
+            }
+        });
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // Remove active styling from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-gold-500', 'text-burgundy-950', 'shadow-md', 'border-t-2', 'border-gold-300');
+                btn.classList.add('bg-burgundy-950', 'text-gold-400', 'hover:bg-burgundy-800', 'border-t-2', 'border-transparent');
             });
-            if (window.siteData.logs.length > 100) window.siteData.logs.pop();
-            window.saveDataToFirebase();
+
+            // Show selected tab
+            document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
+            // Activate selected tab button
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            activeBtn.classList.remove('bg-burgundy-950', 'text-gold-400', 'hover:bg-burgundy-800', 'border-t-2', 'border-transparent');
+            activeBtn.classList.add('bg-gold-500', 'text-burgundy-950', 'shadow-md', 'border-t-2', 'border-gold-300');
         }
 
-        function switchTab(tab) {
-            ['accueil', 'projets', 'quetes', 'points', 'pantheon', 'joueurs', 'banque', 'logs'].forEach(t => {
-                const sec = document.getElementById(`section-${t}`);
-                const btn = document.getElementById(`tab-btn-${t}`);
-                if (sec) sec.classList.add('hidden');
-                if (btn && t !== 'logs' && t !== 'banque' && t !== 'projets') {
-                    btn.className = "px-4 py-2 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 font-bold text-sm hover:text-white transition";
-                } else if (btn && (t === 'banque' || t === 'projets')) {
-                    btn.className = "hidden px-4 py-2 rounded-xl bg-slate-800 text-emerald-400 border border-emerald-500/30 font-bold text-sm hover:text-white transition";
-                    if (isMember || isOfficer || isAdmin) btn.classList.remove('hidden');
-                } else if (btn && t === 'logs') {
-                    btn.className = "hidden px-4 py-2 rounded-xl bg-slate-800 text-purple-400 border border-purple-500/30 font-bold text-sm hover:text-white transition";
-                    if (isAdmin) btn.classList.remove('hidden');
-                }
-            });
-            const activeSec = document.getElementById(`section-${tab}`);
-            const activeBtn = document.getElementById(`tab-btn-${tab}`);
-            if (activeSec) activeSec.classList.remove('hidden');
-            if (activeBtn) {
-                if (tab === 'logs') {
-                    activeBtn.className = "px-4 py-2 rounded-xl bg-purple-600 text-white font-bold text-sm transition";
-                } else if (tab === 'banque' || tab === 'projets') {
-                    activeBtn.className = "px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-sm transition";
-                } else {
-                    activeBtn.className = "px-4 py-2 rounded-xl bg-amber-500 text-slate-950 font-bold text-sm transition";
-                }
-            }
-            if (tab === 'logs') renderLogs();
-        }
-
-        /* MODALE & CONNEXION */
-        function openLoginModal(role) {
-            loginTargetRole = role;
-            if (role === 'admin') document.getElementById('modal-title').innerText = "👑 Connexion Admin";
-            else if (role === 'officer') document.getElementById('modal-title').innerText = "🔒 Connexion Officier";
-            else document.getElementById('modal-title').innerText = "🔑 Connexion Membre";
-
-            document.getElementById('login-user').value = '';
-            document.getElementById('login-pass').value = '';
-            document.getElementById('login-modal').classList.remove('hidden');
-        }
-
-        function closeLoginModal() {
-            document.getElementById('login-modal').classList.add('hidden');
-        }
-
-        function submitLogin() {
-            const user = document.getElementById('login-user').value.trim();
-            const pass = document.getElementById('login-pass').value.trim();
-
-            if (loginTargetRole === 'admin') {
-                if (pass === "Silas12") {
-                    isAdmin = true;
-                    isOfficer = true;
-                    isMember = true;
-                    logAction('connexion_officier', "Connexion Administrateur réussie");
-                    alert("Connexion Admin réussie !");
-                    closeLoginModal();
-                    updateInterfacePermissions();
-                } else {
-                    alert("Mot de passe Admin incorrect !");
-                }
-            } else if (loginTargetRole === 'officer') {
-                const officers = window.siteData.officers || [];
-                const found = officers.find(o => o.user.toLowerCase() === user.toLowerCase() && o.pass === pass);
-                if (found) {
-                    isOfficer = true;
-                    isMember = true;
-                    isAdmin = false;
-                    logAction('connexion_officier', `Connexion de l'officier : ${found.user}`);
-                    alert(`Bienvenue Officier ${found.user} !`);
-                    closeLoginModal();
-                    updateInterfacePermissions();
-                } else {
-                    alert("Identifiants Officier incorrects !");
-                }
-            } else {
-                const members = window.siteData.members || [];
-                const found = members.find(m => m.user.toLowerCase() === user.toLowerCase() && m.pass === pass);
-                if (found) {
-                    isMember = true;
-                    isOfficer = false;
-                    isAdmin = false;
-                    logAction('connexion_membre', `Connexion du membre : ${found.user}`);
-                    alert(`Bienvenue Membre ${found.user} !`);
-                    closeLoginModal();
-                    updateInterfacePermissions();
-                } else {
-                    alert("Identifiants Membre incorrects !");
-                }
-            }
-        }
-
-        function updateInterfacePermissions() {
-            const banner = document.getElementById('role-banner');
-            const bankBtn = document.getElementById('tab-btn-banque');
-            const projBtn = document.getElementById('tab-btn-projets');
-            const logsBtn = document.getElementById('tab-btn-logs');
-
-            if (isMember || isOfficer || isAdmin) {
-                banner.classList.remove('hidden');
-                bankBtn.classList.remove('hidden');
-                projBtn.classList.remove('hidden');
-            } else {
-                banner.classList.add('hidden');
-                bankBtn.classList.add('hidden');
-                projBtn.classList.add('hidden');
-            }
-
+        function toggleAdminModal() {
             if (isAdmin) {
-                document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>👑 Admin Connecté (Accès Total)`;
-                document.getElementById('admin-panel').classList.remove('hidden');
-                logsBtn.classList.remove('hidden');
-            } else {
-                logsBtn.classList.add('hidden');
-                document.getElementById('admin-panel').classList.add('hidden');
+                // If already admin, quick logout option
+                if (confirm("Souhaitez-vous quitter le mode administrateur ?")) {
+                    logoutAdmin();
+                }
+                return;
             }
-
-            if (isOfficer) {
-                document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>🔒 Officier Connecté`;
-            } else if (isMember && !isOfficer && !isAdmin) {
-                document.getElementById('banner-text').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>🔑 Membre Connecté (Banque & Projets Déverrouillés)`;
+            const modal = document.getElementById('admin-modal');
+            modal.classList.toggle('hidden');
+            document.getElementById('admin-password-input').value = '';
+            document.getElementById('admin-error-msg').classList.add('hidden');
+            if (!modal.classList.contains('hidden')) {
+                document.getElementById('admin-password-input').focus();
             }
-
-            if (isOfficer || isAdmin) {
-                document.getElementById('home-officer-edit').classList.remove('hidden');
-                document.getElementById('bank-officer-edit').classList.remove('hidden');
-                document.getElementById('pantheon-officer-edit').classList.remove('hidden');
-                document.getElementById('players-officer-edit').classList.remove('hidden');
-                document.getElementById('projects-officer-edit').classList.remove('hidden');
-                document.getElementById('quests-officer-edit').classList.remove('hidden');
-                document.getElementById('points-officer-edit').classList.remove('hidden');
-                document.getElementById('proofs-badge-btn').classList.remove('hidden');
-            } else {
-                document.getElementById('home-officer-edit').classList.add('hidden');
-                document.getElementById('bank-officer-edit').classList.add('hidden');
-                document.getElementById('pantheon-officer-edit').classList.add('hidden');
-                document.getElementById('players-officer-edit').classList.add('hidden');
-                document.getElementById('projects-officer-edit').classList.add('hidden');
-                document.getElementById('quests-officer-edit').classList.add('hidden');
-                document.getElementById('points-officer-edit').classList.add('hidden');
-                document.getElementById('proofs-badge-btn').classList.add('hidden');
-            }
-
-            window.renderAllSections();
         }
 
-        function logoutRole() {
-            isMember = false;
-            isOfficer = false;
+        function checkAdminPassword() {
+            const pwd = document.getElementById('admin-password-input').value;
+            if (pwd === 'duché') {
+                localStorage.setItem('burgundy_admin_auth', 'true');
+                enableAdminMode();
+                toggleAdminModal();
+            } else {
+                document.getElementById('admin-error-msg').classList.remove('hidden');
+            }
+        }
+
+        function enableAdminMode() {
+            isAdmin = true;
+            document.getElementById('admin-indicator').classList.remove('hidden');
+            document.getElementById('admin-indicator').classList.add('flex');
+            document.getElementById('admin-btn-text').textContent = 'Admin (Actif)';
+            document.getElementById('admin-controls-bar').classList.remove('hidden');
+
+            // Make standard editable fields contenteditable
+            document.querySelectorAll('[data-editable]').forEach(el => {
+                el.setAttribute('contenteditable', 'true');
+                el.classList.add('border', 'border-dashed', 'border-gold-600', 'p-2', 'rounded', 'bg-white/40');
+            });
+
+            // Enable editability on dynamic blocks
+            document.querySelectorAll('.dynamic-editable').forEach(el => {
+                el.setAttribute('contenteditable', 'true');
+            });
+        }
+
+        function logoutAdmin() {
             isAdmin = false;
-            switchTab('accueil');
-            updateInterfacePermissions();
-        }
+            localStorage.setItem('burgundy_admin_auth', 'false');
+            document.getElementById('admin-indicator').classList.add('hidden');
+            document.getElementById('admin-indicator').classList.remove('flex');
+            document.getElementById('admin-btn-text').textContent = 'Espace Admin';
+            document.getElementById('admin-controls-bar').classList.add('hidden');
 
-        /* GESTION COMPTES PAR L'ADMIN */
-        function renderAdminPanel() {
-            const mList = document.getElementById('members-list');
-            mList.innerHTML = '';
-            (window.siteData.members || []).forEach(m => {
-                const item = document.createElement('div');
-                item.className = "flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs";
-                item.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-emerald-400">${m.user}</span>
-                        <span class="text-slate-500">• Mdp: <span class="text-slate-300 font-mono">${m.pass}</span></span>
-                    </div>
-                    <button onclick="deleteMemberAccount(${m.id})" class="text-red-400 hover:underline text-[10px]">Supprimer</button>
-                `;
-                mList.appendChild(item);
+            // Remove contenteditable
+            document.querySelectorAll('[data-editable]').forEach(el => {
+                el.removeAttribute('contenteditable');
+                el.classList.remove('border', 'border-dashed', 'border-gold-600', 'p-2', 'rounded', 'bg-white/40');
             });
 
-            const oList = document.getElementById('officers-list');
-            oList.innerHTML = '';
-            (window.siteData.officers || []).forEach(o => {
-                const item = document.createElement('div');
-                item.className = "flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs";
-                item.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-amber-400">${o.user}</span>
-                        <span class="text-slate-500">• Mdp: <span class="text-slate-300 font-mono">${o.pass}</span></span>
-                    </div>
-                    <button onclick="deleteOfficerAccount(${o.id})" class="text-red-400 hover:underline text-[10px]">Supprimer</button>
-                `;
-                oList.appendChild(item);
+            document.querySelectorAll('.dynamic-editable').forEach(el => {
+                el.removeAttribute('contenteditable');
             });
         }
 
-        function addMemberAccount() {
-            const user = document.getElementById('new-member-user').value.trim();
-            const pass = document.getElementById('new-member-pass').value.trim();
-            if (!user || !pass) return alert("Champs invalides");
-
-            if (!window.siteData.members) window.siteData.members = [];
-            window.siteData.members.push({ id: Date.now(), user, pass });
-            document.getElementById('new-member-user').value = '';
-            document.getElementById('new-member-pass').value = '';
-            logAction('autre', `Création d'un compte membre : ${user}`);
-            window.saveDataToFirebase();
-        }
-
-        function deleteMemberAccount(id) {
-            window.siteData.members = window.siteData.members.filter(m => m.id !== id);
-            logAction('autre', `Suppression d'un compte membre ID: ${id}`);
-            window.saveDataToFirebase();
-        }
-
-        function addOfficerAccount() {
-            const user = document.getElementById('new-officer-user').value.trim();
-            const pass = document.getElementById('new-officer-pass').value.trim();
-            if (!user || !pass) return alert("Champs invalides");
-
-            if (!window.siteData.officers) window.siteData.officers = [];
-            window.siteData.officers.push({ id: Date.now(), user, pass });
-            document.getElementById('new-officer-user').value = '';
-            document.getElementById('new-officer-pass').value = '';
-            logAction('autre', `Création d'un compte officier : ${user}`);
-            window.saveDataToFirebase();
-        }
-
-        function deleteOfficerAccount(id) {
-            window.siteData.officers = window.siteData.officers.filter(o => o.id !== id);
-            logAction('autre', `Suppression d'un compte officier ID: ${id}`);
-            window.saveDataToFirebase();
-        }
-
-        /* LOGS */
-        function renderLogs() {
-            const container = document.getElementById('logs-container');
-            container.innerHTML = '';
-            const logs = window.siteData.logs || [];
-
-            if (logs.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">Aucun log enregistré pour le moment.</p>`;
-                return;
-            }
-
-            logs.forEach(l => {
-                let badgeColor = "bg-slate-800 text-slate-300 border-slate-700";
-                let label = "ACTIVITÉ";
-
-                if (l.type === 'annonce') { badgeColor = "bg-amber-500/20 text-amber-400 border-amber-500/30"; label = "ANNONCE"; }
-                else if (l.type === 'projet') { badgeColor = "bg-blue-500/20 text-blue-400 border-blue-500/30"; label = "PROJET"; }
-                else if (l.type === 'quete') { badgeColor = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"; label = "QUÊTE"; }
-                else if (l.type === 'points') { badgeColor = "bg-amber-500/20 text-amber-400 border-amber-500/30"; label = "POINTS"; }
-                else if (l.type === 'connexion_membre') { badgeColor = "bg-teal-500/20 text-teal-400 border-teal-500/30"; label = "CO MEMBRE"; }
-                else if (l.type === 'connexion_officier') { badgeColor = "bg-purple-500/20 text-purple-400 border-purple-500/30"; label = "CO OFFICIER"; }
-
-                const row = document.createElement('div');
-                row.className = "flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-950 p-3 rounded-xl border border-slate-800 gap-2";
-                row.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase border ${badgeColor}">${label}</span>
-                        <p class="text-xs text-slate-200">${l.text}</p>
-                    </div>
-                    <span class="text-[10px] text-slate-500 font-mono">${l.date}</span>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        function clearLogs() {
-            if (confirm("Voulez-vous vraiment effacer tous les logs ?")) {
-                window.siteData.logs = [];
-                window.saveDataToFirebase();
-                renderLogs();
-            }
-        }
-
-        /* ACCUEIL */
-        function renderHome() {
-            const h = window.siteData.homeData || {};
-            const v = window.siteData.vipData || {};
-            document.getElementById('home-title').innerText = h.title || '';
-            document.getElementById('home-desc').innerText = h.desc || '';
-            document.getElementById('discord-link').href = h.discord || '#';
-            document.getElementById('vip-name').innerText = v.name || '';
-            document.getElementById('vip-title').innerText = v.title || '';
-            document.getElementById('vip-desc').innerText = `"${v.desc || ''}"`;
-
-            const vipImgBox = document.getElementById('vip-img-box');
-            const avatarUrl = v.img || `https://crafthead.net/avatar/${v.name || 'steve'}`;
-            vipImgBox.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
-
-            const galleryContainer = document.getElementById('home-gallery');
-            galleryContainer.innerHTML = '';
-            (h.gallery || ["", "", ""]).forEach((url, i) => {
-                const box = document.createElement('div');
-                box.className = "h-48 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center overflow-hidden";
-                box.innerHTML = url ? `<img src="${url}" class="w-full h-full object-cover">` : `<span class="text-xs font-bold text-slate-600">PHOTO ${i + 1}</span>`;
-                galleryContainer.appendChild(box);
-            });
-
-            document.getElementById('edit-home-title').value = h.title || '';
-            document.getElementById('edit-home-desc').value = h.desc || '';
-            document.getElementById('edit-home-discord').value = h.discord || '';
-            document.getElementById('edit-vip-name').value = v.name || '';
-            document.getElementById('edit-vip-title').value = v.title || '';
-            document.getElementById('edit-vip-img').value = v.img || '';
-            document.getElementById('edit-vip-desc').value = v.desc || '';
-
-            if (isAdmin) renderAdminPanel();
-        }
-
-        function updateHome(field, val) {
-            window.siteData.homeData[field] = val;
-            logAction('annonce', `Modification de l'accueil / VIP (${field})`);
-            window.saveDataToFirebase();
-        }
-
-        function updateVip(field, val) {
-            window.siteData.vipData[field] = val;
-            logAction('annonce', `Mise à jour du VIP (${field})`);
-            window.saveDataToFirebase();
-        }
-
-        /* BANQUE + ATTRIBUTION AUTO POINTS (1k = 10 pts) */
-        function renderBank() {
-            let totalDons = 0; let totalDepenses = 0; let donatorsMap = {};
-            const list = document.getElementById('bank-transactions-list');
-            list.innerHTML = '';
-
-            (window.siteData.bankTransactions || []).forEach(t => {
-                if (t.type === 'don') {
-                    totalDons += t.amount;
-                    donatorsMap[t.actor] = (donatorsMap[t.actor] || 0) + t.amount;
-                } else {
-                    totalDepenses += t.amount;
+        function saveAllChanges() {
+            // Save standard editable fields
+            const dataToSave = {};
+            document.querySelectorAll('[data-editable]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (key) {
+                    dataToSave[key] = el.innerHTML;
                 }
-
-                const isDon = t.type === 'don';
-                const row = document.createElement('div');
-                row.className = `flex justify-between items-center p-3 rounded-xl border ${isDon ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-rose-500/5 border-rose-500/20'}`;
-                row.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs px-2 py-1 rounded-lg font-bold uppercase ${isDon ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">
-                            ${isDon ? 'DON' : 'DÉPENSE'}
-                        </span>
-                        <div>
-                            <p class="text-sm font-bold text-white">${t.actor}</p>
-                            <p class="text-[10px] text-slate-400">${t.date}</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm font-black ${isDon ? 'text-emerald-400' : 'text-rose-400'}">
-                            ${isDon ? '+' : '-'}${t.amount}k
-                        </span>
-                        ${isOfficer ? `<button onclick="deleteTransaction(${t.id})" class="text-red-400 text-xs hover:underline">Supprimer</button>` : ''}
-                    </div>
-                `;
-                list.appendChild(row);
             });
 
-            document.getElementById('bank-balance').innerText = `${totalDons - totalDepenses}k`;
-            document.getElementById('bank-total-donations').innerText = `${totalDons}k`;
-            document.getElementById('bank-total-expenses').innerText = `${totalDepenses}k`;
-
-            const sorted = Object.entries(donatorsMap).sort((a, b) => b[1] - a[1]).slice(0, 3);
-            const topList = document.getElementById('top-donators-list');
-            topList.innerHTML = '';
-            const medals = ['🥇', '🥈', '🥉'];
-            sorted.forEach(([name, amount], i) => {
-                const card = document.createElement('div');
-                card.className = "bg-slate-950/60 border border-slate-800 p-3 rounded-xl flex items-center justify-between";
-                card.innerHTML = `<div class="flex items-center gap-2"><span class="text-lg">${medals[i]}</span><span class="text-xs font-bold text-white">${name}</span></div><span class="text-xs font-black text-amber-400">${amount}k</span>`;
-                topList.appendChild(card);
-            });
-        }
-
-        function addTransaction() {
-            const type = document.getElementById('trans-type').value;
-            const actor = document.getElementById('trans-actor').value.trim();
-            const amount = parseFloat(document.getElementById('trans-amount').value);
-
-            if (!actor || isNaN(amount) || amount <= 0) return alert("Champs invalides");
-
-            if (!window.siteData.bankTransactions) window.siteData.bankTransactions = [];
-            window.siteData.bankTransactions.unshift({
-                id: Date.now(), type, actor, amount, date: new Date().toLocaleDateString('fr-FR')
+            // Save dynamic blocks for each tab
+            ['accueil', 'garde', 'orange', 'brabant'].forEach(tab => {
+                const container = document.getElementById(`dynamic-blocks-${tab}`);
+                dataToSave[`dynamic_${tab}`] = container.innerHTML;
             });
 
-            // SI C'EST UN DON -> ATTRIBUTION AUTOMATIQUE DE POINTS (1k = 10 points)
-            if (type === 'don') {
-                const pointsEarned = amount * 10;
-                let player = (window.siteData.players || []).find(p => p.name.toLowerCase() === actor.toLowerCase());
-                if (player) {
-                    player.points = (player.points || 0) + pointsEarned;
-                } else {
-                    // Si le joueur n'est pas dans la liste, on le crée automatiquement
-                    window.siteData.players.push({
-                        id: Date.now(),
-                        name: actor,
-                        role: "Citoyen",
-                        date: new Date().toLocaleDateString('fr-FR'),
-                        status: "actif",
-                        points: pointsEarned,
-                        warnings: 0,
-                        img: ""
-                    });
-                }
-                logAction('points', `Attribution automatique de ${pointsels = pointsEarned} points à ${actor} suite à un don de ${amount}k`);
-            }
-
-            document.getElementById('trans-actor').value = '';
-            document.getElementById('trans-amount').value = '';
-            logAction('autre', `Transaction bancaire (${type}) de ${amount}k par ${actor}`);
-            window.saveDataToFirebase();
+            localStorage.setItem('burgundy_site_content', JSON.stringify(dataToSave));
+            alert("Modifications enregistrées avec succès dans la mémoire souveraine !");
         }
 
-        function deleteTransaction(id) {
-            window.siteData.bankTransactions = window.siteData.bankTransactions.filter(t => t.id !== id);
-            logAction('autre', `Suppression transaction bancaire ID: ${id}`);
-            window.saveDataToFirebase();
-        }
-
-        /* GESTION DES POINTS & AVERTISSEMENTS */
-        function renderPoints() {
-            const list = document.getElementById('points-ranking-list');
-            list.innerHTML = '';
-
-            // Tri par points décroissants
-            const sortedPlayers = [...(window.siteData.players || [])].sort((a, b) => (b.points || 0) - (a.points || 0));
-
-            sortedPlayers.forEach(p => {
-                const pts = p.points || 0;
-                const warns = p.warnings || 0;
-                const isInRed = pts < 50;
-
-                const row = document.createElement('div');
-                row.className = `flex flex-col md:flex-row justify-between items-start md:items-center p-3.5 rounded-xl border ${isInRed ? 'bg-rose-500/10 border-rose-500/40 animate-pulse' : 'bg-slate-950 border-slate-800'}`;
-                row.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <img src="${p.img || 'https://crafthead.net/avatar/' + p.name}" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 object-cover">
-                        <div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm font-bold text-white">${p.name}</span>
-                                ${isInRed ? '<span class="text-[10px] bg-rose-500 text-slate-950 px-2 py-0.5 rounded-full font-black">⚠️ DANS LE ROUGE (< 50 pts)</span>' : ''}
-                            </div>
-                            <p class="text-[10px] text-slate-400">Avertissements : <span class="text-rose-400 font-bold">${warns}</span></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4 mt-2 md:mt-0">
-                        <span class="text-sm font-black text-amber-400">${pts} Points</span>
-                        ${isOfficer ? `
-                            <div class="flex gap-1">
-                                <button onclick="quickAddPoints('${p.name}', 50)" class="bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 px-2.5 py-1 rounded-lg text-[10px] font-bold">+50 pts</button>
-                                <button onclick="quickAddPoints('${p.name}', -50)" class="bg-rose-600/20 border border-rose-500/30 text-rose-400 px-2.5 py-1 rounded-lg text-[10px] font-bold">-50 pts</button>
-                                <button onclick="giveWarning('${p.name}')" class="bg-amber-600/20 border border-amber-500/30 text-amber-400 px-2.5 py-1 rounded-lg text-[10px] font-bold">⚠️ Avertir</button>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-                list.appendChild(row);
-            });
-        }
-
-        function adjustMemberPoints() {
-            const name = document.getElementById('adj-point-name').value.trim();
-            const val = parseInt(document.getElementById('adj-point-val').value);
-            const reason = document.getElementById('adj-point-reason').value.trim();
-
-            if (!name || isNaN(val)) return alert("Veuillez remplir un pseudo et une valeur de points valide !");
-
-            let player = (window.siteData.players || []).find(p => p.name.toLowerCase() === name.toLowerCase());
-            if (!player) return alert("Joueur introuvable dans la liste !");
-
-            player.points = (player.points || 0) + val;
-            if (val < 0 && reason.toLowerCase().includes('avertissement')) {
-                player.warnings = (player.warnings || 0) + 1;
-            }
-
-            document.getElementById('adj-point-name').value = '';
-            document.getElementById('adj-point-val').value = '';
-            document.getElementById('adj-point-reason').value = '';
-
-            logAction('points', `Ajustement de ${val} points pour ${name} (${reason || 'Ajustement manuel'})`);
-            window.saveDataToFirebase();
-        }
-
-        function quickAddPoints(name, val) {
-            let player = (window.siteData.players || []).find(p => p.name.toLowerCase() === name.toLowerCase());
-            if (player) {
-                player.points = (player.points || 0) + val;
-                logAction('points', `Ajustement rapide de ${val} pts pour ${name}`);
-                window.saveDataToFirebase();
-            }
-        }
-
-        function giveWarning(name) {
-            let player = (window.siteData.players || []).find(p => p.name.toLowerCase() === name.toLowerCase());
-            if (player) {
-                player.warnings = (player.warnings || 0) + 1;
-                player.points = Math.max(0, (player.points || 0) - 50); // Retire 50 points par avertissement
-                logAction('points', `⚠️ Avertissement attribué à ${name} (-50 points)`);
-                window.saveDataToFirebase();
-            }
-        }
-
-        /* QUÊTES & PREUVES */
-        function renderQuests() {
-            const grid = document.getElementById('quests-grid');
-            grid.innerHTML = '';
-            
-            // Met à jour le badge du nombre de preuves en attente pour les officiers
-            const proofsCount = (window.siteData.proofs || []).filter(p => !p.validated).length;
-            document.getElementById('proofs-count-badge').innerText = proofsCount;
-
-            (window.siteData.quests || []).forEach(q => {
-                const card = document.createElement('div');
-                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between";
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start gap-2 mb-2">
-                            <h3 class="text-base font-bold text-white">${q.title}</h3>
-                            <span class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold">${q.status}</span>
-                        </div>
-                        <p class="text-xs text-slate-300 mb-3">${q.desc}</p>
-                        <div class="flex flex-wrap gap-2 text-xs mb-4">
-                            <span class="bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 text-slate-300">🎁 ${q.reward}</span>
-                            <span class="bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/20 text-amber-400 font-bold">⭐ ${q.points || 0} Points</span>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <button onclick="openProofModal(${q.id}, '${q.title.replace(/'/g, "\\'")}')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition">
-                            📸 Terminer (Envoyer Preuve)
-                        </button>
-                        ${isOfficer ? `<button onclick="deleteQuest(${q.id})" class="text-red-400 text-xs text-left hover:underline">Supprimer la quête</button>` : ''}
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function addQuest() {
-            const title = document.getElementById('new-quest-title').value.trim();
-            const reward = document.getElementById('new-quest-reward').value.trim();
-            const pointsInput = document.getElementById('new-quest-points').value.trim();
-            const desc = document.getElementById('new-quest-desc').value.trim();
-            
-            if (!title) return alert("Le titre de la quête est requis !");
-
-            // Extraction intelligente si l'officier tape /points 100 ou juste 100
-            let pointsVal = parseInt(pointsInput.replace(/[^0-9]/g, '')) || 0;
-
-            if (!window.siteData.quests) window.siteData.quests = [];
-            window.siteData.quests.push({ 
-                id: Date.now(), 
-                title, 
-                reward, 
-                points: pointsVal, 
-                status: "En cours", 
-                desc 
-            });
-            
-            document.getElementById('new-quest-title').value = '';
-            document.getElementById('new-quest-reward').value = '';
-            document.getElementById('new-quest-points').value = '';
-            document.getElementById('new-quest-desc').value = '';
-            
-            logAction('quete', `Création de la quête : ${title} (${pointsVal} points)`);
-            window.saveDataToFirebase();
-        }
-
-        function deleteQuest(id) {
-            const q = (window.siteData.quests || []).find(item => item.id === id);
-            window.siteData.quests = window.siteData.quests.filter(quest => quest.id !== id);
-            logAction('quete', `Suppression de la quête : ${q ? q.title : id}`);
-            window.saveDataToFirebase();
-        }
-
-        /* MODALE PREUVE */
-        function openProofModal(questId, questTitle) {
-            document.getElementById('proof-quest-id').value = questId;
-            document.getElementById('proof-modal-quest-title').innerText = `Quête : ${questTitle}`;
-            document.getElementById('proof-user').value = '';
-            document.getElementById('proof-img-url').value = '';
-            document.getElementById('proof-modal').classList.remove('hidden');
-        }
-
-        function closeProofModal() {
-            document.getElementById('proof-modal').classList.add('hidden');
-        }
-
-        function submitProof() {
-            const questId = parseInt(document.getElementById('proof-quest-id').value);
-            const user = document.getElementById('proof-user').value.trim();
-            const imgUrl = document.getElementById('proof-img-url').value.trim();
-
-            if (!user || !imgUrl) return alert("Veuillez entrer votre pseudo et l'URL de la photo de preuve !");
-
-            const quest = (window.siteData.quests || []).find(q => q.id === questId);
-            if (!quest) return alert("Quête introuvable !");
-
-            if (!window.siteData.proofs) window.siteData.proofs = [];
-            window.siteData.proofs.push({
-                id: Date.now(),
-                questId: quest.id,
-                questTitle: quest.title,
-                questPoints: quest.points || 0,
-                user: user,
-                imgUrl: imgUrl,
-                validated: false,
-                date: new Date().toLocaleString('fr-FR')
-            });
-
-            closeProofModal();
-            alert("Preuve envoyée avec succès au panel des officiers !");
-            logAction('quete', `${user} a soumis une preuve pour la quête "${quest.title}"`);
-            window.saveDataToFirebase();
-        }
-
-        /* PANEL OFFICIERS : VOIR ET VALIDER LES PREUVES */
-        function openProofsPanel() {
-            renderProofsList();
-            document.getElementById('proofs-panel-modal').classList.remove('hidden');
-        }
-
-        function closeProofsPanel() {
-            document.getElementById('proofs-panel-modal').classList.add('hidden');
-        }
-
-        function renderProofsList() {
-            const container = document.getElementById('proofs-list-container');
-            container.innerHTML = '';
-            const proofs = window.siteData.proofs || [];
-
-            if (proofs.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">Aucune preuve soumise pour le moment.</p>`;
-                return;
-            }
-
-            proofs.forEach(p => {
-                const item = document.createElement('div');
-                item.className = `bg-slate-950 border p-4 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${p.validated ? 'border-emerald-500/30 opacity-75' : 'border-amber-500/40'}`;
-                item.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <img src="${p.imgUrl}" class="w-16 h-16 rounded-xl bg-slate-900 border border-slate-700 object-cover shrink-0" onerror="this.src='https://via.placeholder.com/150?text=Image+Invalide'">
-                        <div>
-                            <span class="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold">${p.questTitle}</span>
-                            <h4 class="text-sm font-bold text-white mt-1">Joueur : <span class="text-emerald-400">${p.user}</span></h4>
-                            <p class="text-[10px] text-slate-400">Récompense prévue : <span class="text-amber-400 font-bold">${p.questPoints} Points</span> • Soumis le ${p.date}</p>
-                        </div>
-                    </div>
-                    <div>
-                        ${p.validated ? 
-                            `<span class="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20">✅ Validé & Points Attribués</span>` :
-                            `<button onclick="validateProof(${p.id})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs uppercase">Valider & Donner ${p.questPoints} pts</button>`
+        function loadSavedData() {
+            const saved = localStorage.getItem('burgundy_site_content');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    // Load standard fields
+                    document.querySelectorAll('[data-editable]').forEach(el => {
+                        const key = el.getAttribute('data-key');
+                        if (key && data[key] !== undefined) {
+                            el.innerHTML = data[key];
                         }
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
+                    });
 
-        function validateProof(proofId) {
-            let proof = (window.siteData.proofs || []).find(p => p.id === proofId);
-            if (!proof || proof.validated) return;
-
-            proof.validated = true;
-
-            // Attribution automatique des points au joueur
-            let player = (window.siteData.players || []).find(pl => pl.name.toLowerCase() === proof.user.toLowerCase());
-            if (player) {
-                player.points = (player.points || 0) + proof.questPoints;
-            } else {
-                window.siteData.players.push({
-                    id: Date.now(),
-                    name: proof.user,
-                    role: "Citoyen",
-                    date: new Date().toLocaleDateString('fr-FR'),
-                    status: "actif",
-                    points: proof.questPoints,
-                    warnings: 0,
-                    img: ""
-                });
-            }
-
-            logAction('points', `Validation de la quête "${proof.questTitle}" pour ${proof.user} (+${proof.questPoints} points attribués)`);
-            window.saveDataToFirebase();
-            renderProofsList();
-        }
-
-        /* PANTHÉON */
-        function renderPantheon() {
-            const a = window.siteData.amineData || {};
-            document.getElementById('pantheon-amine-name').innerText = a.name || 'amine';
-            document.getElementById('pantheon-amine-desc').innerText = a.desc || '';
-            const imgBox = document.getElementById('pantheon-amine-img');
-            const avatarUrl = a.img || `https://crafthead.net/avatar/${a.name || 'amine'}`;
-            imgBox.innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
-
-            document.getElementById('edit-amine-name').value = a.name || '';
-            document.getElementById('edit-amine-desc').value = a.desc || '';
-            document.getElementById('edit-amine-img').value = a.img || '';
-        }
-
-        function updateAmine(field, val) {
-            window.siteData.amineData[field] = val;
-            logAction('annonce', `Modification du Panthéon (${field})`);
-            window.saveDataToFirebase();
-        }
-
-        /* JOUEURS */
-        function renderCards() {
-            const grid = document.getElementById('players-grid');
-            const select = document.getElementById('edit-player-select');
-            grid.innerHTML = '';
-            select.innerHTML = '';
-
-            let totalActifs = 0; let totalRetraites = 0;
-
-            (window.siteData.players || []).forEach(p => {
-                const isActif = p.status === 'actif';
-                if (isActif) totalActifs++; else totalRetraites++;
-
-                const avatarUrl = p.img || `https://crafthead.net/avatar/${p.name}`;
-                const card = document.createElement('div');
-                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center gap-4 relative overflow-hidden shadow-md";
-                card.innerHTML = `
-                    <img src="${avatarUrl}" class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 object-cover shrink-0">
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center justify-between gap-1">
-                            <h3 class="text-sm font-bold text-white truncate">${p.name}</h3>
-                            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold ${isActif ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-500 border border-slate-700'}">
-                                ${isActif ? 'Actif' : 'Retraité'}
-                            </span>
-                        </div>
-                        <p class="text-xs text-amber-400 font-semibold truncate mt-0.5">${p.role}</p>
-                        <p class="text-[10px] text-slate-500 mt-1">Points : <span class="text-white font-bold">${p.points || 0}</span></p>
-                    </div>
-                `;
-                grid.appendChild(card);
-
-                const option = document.createElement('option');
-                option.value = p.id;
-                option.textContent = p.name;
-                select.appendChild(option);
-            });
-
-            document.getElementById('stat-total').innerText = (window.siteData.players || []).length;
-            document.getElementById('stat-actifs').innerText = totalActifs;
-            document.getElementById('stat-retraites').innerText = totalRetraites;
-            loadPlayerToEdit();
-        }
-
-        function loadPlayerToEdit() {
-            const id = parseInt(document.getElementById('edit-player-select').value);
-            const player = (window.siteData.players || []).find(p => p.id === id);
-            if (player) {
-                document.getElementById('edit-player-name').value = player.name;
-                document.getElementById('edit-player-role').value = player.role;
-                document.getElementById('edit-player-date').value = player.date;
-                document.getElementById('edit-player-status').value = player.status;
+                    // Load dynamic blocks
+                    ['accueil', 'garde', 'orange', 'brabant'].forEach(tab => {
+                        if (data[`dynamic_${tab}`]) {
+                            document.getElementById(`dynamic-blocks-${tab}`).innerHTML = data[`dynamic_${tab}`];
+                        }
+                    });
+                } catch(e) {
+                    console.error("Erreur de chargement des données", e);
+                }
             }
         }
 
-        function savePlayerEdit() {
-            const id = parseInt(document.getElementById('edit-player-select').value);
-            const player = (window.siteData.players || []).find(p => p.id === id);
-            if (player) {
-                const oldName = player.name;
-                player.name = document.getElementById('edit-player-name').value;
-                player.role = document.getElementById('edit-player-role').value;
-                player.date = document.getElementById('edit-player-date').value;
-                player.status = document.getElementById('edit-player-status').value;
-                logAction('joueur', `Modification du joueur : ${oldName} -> ${player.name} (${player.role})`);
-                window.saveDataToFirebase();
+        function resetDefaults() {
+            if (confirm("Êtes-vous sûr de vouloir réinitialiser tout le site aux textes d'origine ?")) {
+                localStorage.removeItem('burgundy_site_content');
+                location.reload();
             }
         }
 
-        /* PROJETS (ACCESSIBLE SEULEMENT AUX MEMBRES) */
-        function renderProjects() {
-            const grid = document.getElementById('projects-grid');
-            grid.innerHTML = '';
-            (window.siteData.projects || []).forEach(pj => {
-                const card = document.createElement('div');
-                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between";
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start gap-2 mb-2">
-                            <h3 class="text-base font-bold text-white">${pj.title}</h3>
-                            <span class="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold">${pj.status}</span>
-                        </div>
-                        <p class="text-xs text-slate-400">${pj.desc}</p>
-                    </div>
-                    ${isOfficer ? `<button onclick="deleteProject(${pj.id})" class="text-red-400 text-xs mt-4 text-left hover:underline">Supprimer</button>` : ''}
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function addProject() {
-            const title = document.getElementById('new-proj-title').value.trim();
-            const status = document.getElementById('new-proj-status').value.trim();
-            const desc = document.getElementById('new-proj-desc').value.trim();
-            if (!title) return alert("Le titre du projet est requis !");
-
-            if (!window.siteData.projects) window.siteData.projects = [];
-            window.siteData.projects.push({ id: Date.now(), title, status, desc });
+        function addNewBlock() {
+            const container = document.getElementById(`dynamic-blocks-${currentTab}`);
+            const blockId = 'block_' + Date.now();
             
-            document.getElementById('new-proj-title').value = '';
-            document.getElementById('new-proj-status').value = '';
-            document.getElementById('new-proj-desc').value = '';
-            
-            logAction('projet', `Ajout d'un nouveau projet : ${title} (${status})`);
-            window.saveDataToFirebase();
+            const newDiv = document.createElement('div');
+            newDiv.className = 'p-6 bg-amber-50/80 rounded-xl border-2 border-amber-900/40 relative shadow-md space-y-3 group mt-4';
+            newDiv.innerHTML = `
+                <div class="flex justify-between items-center border-b border-amber-900/20 pb-2">
+                    <span class="font-cinzel text-xs font-bold text-burgundy-900 uppercase">Bloc additionnel</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-rose-700 hover:text-rose-900 text-sm font-bold bg-white px-2 py-1 rounded border border-rose-300">
+                        <i class="fa-solid fa-trash"></i> Supprimer ce bloc
+                    </button>
+                </div>
+                <h3 class="text-2xl font-cinzel font-bold text-burgundy-900 dynamic-editable" ${isAdmin ? 'contenteditable="true"' : ''}>Nouveau Titre de Section</h3>
+                <div class="font-playfair text-stone-900 leading-relaxed dynamic-editable" ${isAdmin ? 'contenteditable="true"' : ''}>
+                    <p>Saisissez ici le texte de votre nouveau paragraphe historique ou descriptif...</p>
+                </div>
+            `;
+            container.appendChild(newDiv);
         }
 
-        function deleteProject(id) {
-            const p = (window.siteData.projects || []).find(item => item.id === id);
-            window.siteData.projects = window.siteData.projects.filter(proj => proj.id !== id);
-            logAction('projet', `Suppression du projet : ${p ? p.title : id}`);
-            window.saveDataToFirebase();
-        }
+        function addNewImageBlock() {
+            const imgUrl = prompt("Entrez l'URL de l'image (ou le nom d'une image valide) :", "https://placehold.co/600x300/581826/FACC15?text=Illustration+Historique");
+            if (!imgUrl) return;
 
-        window.renderAllSections = function() {
-            renderHome();
-            renderBank();
-            renderPoints();
-            renderPantheon();
-            renderCards();
-            renderProjects();
-            renderQuests();
+            const caption = prompt("Entrez la légende de l'image :", "Illustration héraldique ou monument historique");
+
+            const container = document.getElementById(`dynamic-blocks-${currentTab}`);
+            const newDiv = document.createElement('div');
+            newDiv.className = 'p-4 bg-amber-50/80 rounded-xl border-2 border-amber-900/40 relative shadow-md space-y-3 mt-4 text-center';
+            newDiv.innerHTML = `
+                <div class="flex justify-end">
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-rose-700 hover:text-rose-900 text-sm font-bold bg-white px-2 py-1 rounded border border-rose-300">
+                        <i class="fa-solid fa-trash"></i> Supprimer l'image
+                    </button>
+                </div>
+                <div class="max-w-md mx-auto rounded-lg border-2 border-amber-900 p-2 bg-white shadow overflow-hidden">
+                    <img src="${imgUrl}" alt="Illustration" class="w-full h-auto object-cover rounded" onerror="this.src='https://placehold.co/600x300/581826/FACC15?text=Image+Indisponible'">
+                </div>
+                <p class="font-playfair italic text-sm text-amber-900 dynamic-editable mt-2" ${isAdmin ? 'contenteditable="true"' : ''}>${caption || ''}</p>
+            `;
+            container.appendChild(newDiv);
         }
     </script>
 </body>
